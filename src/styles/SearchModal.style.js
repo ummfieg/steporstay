@@ -33,3 +33,63 @@ export const CloseBtn = styled.img`
   cursor: pointer;
   z-index: 1000;
 `;
+
+export const SearchWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 0.625rem;
+  margin-top: 3rem;
+  position: relative;
+
+  img {
+    cursor: pointer;
+    position: absolute;
+    left: 90%;
+    top: 27%;
+  }
+`;
+
+export const SearchBar = styled.input`
+  border: 1px solid transparent;
+  flex: 1;
+  border-radius: 1.2rem;
+  background-color: var(--searchBg);
+  padding: 0.8rem;
+  height: 3rem;
+
+  :focus {
+    border: 3px solid var(--secondary);
+  }
+`;
+
+export const ModalInfoText = styled.p`
+  font-size: 0.7rem;
+  color: var(--secondary);
+  position: absolute;
+  top: 85%;
+  left: 50%;
+  transform: translateX(-50%);
+`;
+
+export const SelectedLocions = styled.div`
+  padding: 3px;
+  border: none;
+  border-radius: 10%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+
+  div {
+    display: flex;
+    gap: 0.625rem;
+  }
+
+  img {
+    cursor: pointer;
+    width: 1rem;
+  }
+`;

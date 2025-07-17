@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Logo, Wrapper } from "./styles/Home.style";
-import Window from "./assets/window.svg";
+import {
+  Logo,
+  StayIcon,
+  StepIcon,
+  TextBubble,
+  Wrapper,
+  WindowImgWrapper,
+} from "./styles/Home.style";
 import WeatherDisplay from "./features/WeatherDisplay";
 import SearchModal from "./components/SearchModal";
 
@@ -18,8 +24,18 @@ const Home = () => {
 
   return (
     <Wrapper>
-      <Logo>Step Or Stay ?</Logo>
-      <img src={Window} height={560} />
+      <Logo>
+        <span>Step</span>
+        <span>Or</span>
+        <span>Stay?</span>
+      </Logo>
+      <WindowImgWrapper>
+        <StepIcon />
+        <StayIcon />
+        <TextBubble>
+          <span>🧥 외출시 겉옷을 챙기세요!</span>
+        </TextBubble>
+      </WindowImgWrapper>
       <WeatherDisplay onOpen={openModal} />
       {isModalOpen && <SearchModal onClose={closeModal} />}
     </Wrapper>

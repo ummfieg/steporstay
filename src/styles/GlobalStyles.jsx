@@ -12,6 +12,15 @@ const GlobalStyle = createGlobalStyle`
     font-style: normal;
 }
 
+:root {
+    --white : #ffffff;
+    --black : #000000;
+    --secondary : #6D6D6D;
+    --placeholder : #A2A2A2;
+    --searchBg : #EDF2FA;
+    --logo:#ECECEC;
+} 
+
 body {
     margin: 0 auto;
     width: 600px;
@@ -20,12 +29,8 @@ body {
     background-color: #f9f9f9;
 }
 
-:root {
-    --white : #ffffff;
-    --black : #000000;
-    --secondary : #6D6D6D;
-    --placeholder : #A2A2A2;
-    --searchBg : #EDF2FA;
+h1, h2, h3, button, input {
+    font-family: 'SUIT-Regular';
 }
 `;
 
