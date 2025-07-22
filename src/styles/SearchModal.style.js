@@ -56,9 +56,9 @@ export const SearchBar = styled.input`
   background-color: var(--searchBg);
   padding: 0.8rem;
   height: 3rem;
-
-  :focus {
-    border: 3px solid var(--secondary);
+  outline: none;
+  &:focus {
+    border: 3px solid var(--logo);
   }
 `;
 
@@ -74,7 +74,6 @@ export const ModalInfoText = styled.p`
 export const SelectedLocions = styled.div`
   padding: 3px;
   border: none;
-  border-radius: 10%;
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
@@ -85,11 +84,18 @@ export const SelectedLocions = styled.div`
 
   div {
     display: flex;
+    align-items: center;
+    justify-content: center;
     gap: 0.625rem;
   }
-
   img {
     cursor: pointer;
     width: 1rem;
+    &:hover {
+      transform: scale(1.1);
+      background-color: var(--logo);
+      border: none;
+      border-radius: 50%;
+    }
   }
 `;
