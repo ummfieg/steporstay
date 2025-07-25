@@ -12,9 +12,10 @@ const mockDate = {
   content: "현재 기운은 높고, 자외선이 강해요",
 };
 
-const WeatherDisplay = ({ onOpen, weatherDataList }) => {
+const WeatherDisplay = ({ onOpen, weatherDataList, weatherMessage }) => {
   const { location, temp, weather, content } = weatherDataList[0] || {};
   const roundedTemp = Math.round(temp);
+
   return (
     <>
       <DisplayWrapper>
@@ -24,7 +25,8 @@ const WeatherDisplay = ({ onOpen, weatherDataList }) => {
           <span>{location}</span>
         </RegionWrapper>
         <Degree>{roundedTemp}°C</Degree>
-        <span>현재 날씨는 {content}</span>
+        <span>• </span>
+        <span>{weatherMessage}</span>
       </DisplayWrapper>
     </>
   );

@@ -9,12 +9,25 @@ import {
 } from "./styles/Home.style";
 import WeatherDisplay from "./features/WeatherDisplay";
 import SearchModal from "./components/SearchModal";
+import { getCombineMessage } from "./utils/combineWeatherMessage";
 const weatherKey = import.meta.env.VITE_WEATHER_API_KEY;
 
 const Home = () => {
   const [locationList, setLocationList] = useState(["서울"]);
   const [weatherDataList, setWeatherDataList] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { temp, pm2_5, weather, weatherId, visibility, wind, humidity } =
+    weatherDataList[0] || {};
+
+  const { weatherMessage, recommendationText } = getCombineMessage({
+    temp,
+    pm2_5,
+    weather,
+    weatherId,
+    visibility,
+    wind,
+    humidity,
+  });
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -49,7 +62,7 @@ const Home = () => {
 
           const weatherData = await weatherRes.json();
           const airData = await airRes.json();
-
+          console.log("weather:", weather);
           if (
             !weatherData ||
             !weatherData.weather ||
@@ -62,12 +75,7 @@ const Home = () => {
           console.log("미세먼지:", airData);
 
           console.log("세부날씨:", weatherData.weather);
-          console.log(
-            "세부미세먼지:",
-            airData.list[0].main.aqi,
-            "미먼농도:",
-            airData.list[0].components.pm2_5
-          );
+          console.log("미먼농도:", airData.list[0].components.pm2_5);
 
           setWeatherDataList((prevData) => [
             ...prevData,
@@ -75,10 +83,13 @@ const Home = () => {
               id: weatherData.id,
               location: weatherData.name,
               temp: weatherData.main.temp,
-              weather: weatherData.weather[0].description,
+              visibility: weatherData.visibility,
+              weather: weatherData.weather.map((w) => w.main),
+              weatherId: weatherData.weather[0].id,
+              humidity: weatherData.main.humidity,
+              wind: weatherData.wind.speed,
               pm2_5: airData.list[0].components.pm2_5,
               aqi: airData.list[0].main.aqi,
-              content: `${weatherData.weather[0].description}이며, PM2.5 수치는 ${airData.list[0].components.pm2_5}㎍/m³이에요`,
             },
           ]);
         };
@@ -109,10 +120,14 @@ const Home = () => {
         <StepIcon />
         <StayIcon />
         <TextBubble>
-          <span>🧥 외출시 겉옷을 챙기세요!</span>
+          <span>{recommendationText}</span>
         </TextBubble>
       </WindowImgWrapper>
-      <WeatherDisplay onOpen={openModal} weatherDataList={weatherDataList} />
+      <WeatherDisplay
+        onOpen={openModal}
+        weatherDataList={weatherDataList}
+        weatherMessage={weatherMessage}
+      />
       {isModalOpen && (
         <SearchModal
           onClose={closeModal}
