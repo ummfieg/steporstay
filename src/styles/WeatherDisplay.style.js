@@ -18,6 +18,24 @@ export const RegionWrapper = styled.div`
   background-color: rgba(255, 255, 255, 0.6);
   border-radius: 40%;
   border: none;
-  padding: 3px;
   cursor: pointer;
+  padding: 3px;
+`;
+
+export const ChangeLocationBtn = styled.div`
+  display: inline-block;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  background-image: url("assets/repeat.svg");
+  width: 0.9rem;
+  height: 0.9rem;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  margin-left: 0.5em;
+  padding: 2px;
+  &:hover {
+    transform: scale(1.1);
+  }
 `;

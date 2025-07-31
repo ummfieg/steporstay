@@ -35,23 +35,21 @@ export const getCombineMessage = ({
   const weatherMessage = [];
   const recommendationText = [];
   console.log(temp, "온도..");
+  console.log("지금지역 날씨", weather);
   console.log("날씨메세지", weatherMainMessage);
   console.log("추천행동", recommendationText);
 
-  // 일반 날씨
+  // 일반 날씨 (기본반영)
   if (weatherMainMessage) weatherMessage.push(weatherMainMessage);
   if (tempMessage) weatherMessage.push(tempMessage);
 
   //폭염+한파
   if ((temp <= 5 || temp >= 30) && tempRec) {
     recommendationText.push(tempRec);
-  } else if (weatherIdRec) {
-    recommendationText.push(weatherIdRec);
   }
 
   // 비, 안개 조합
   if (weatherMainList.includes("Rain") && weatherMainList.includes("Fog")) {
-    if (weatherIdRec) recommendationText.push(weatherIdRec);
     if (visibilityRec) recommendationText.push(visibilityRec);
     if (visibilityMessage) weatherMessage.push(visibilityMessage);
   }
@@ -64,13 +62,22 @@ export const getCombineMessage = ({
 
   // 미세먼지
   if (weatherMainList.includes("Dust")) {
-    if (weatherIdRec) recommendationText.push(weatherIdRec);
     if (dustRec) recommendationText.push(dustRec);
   }
 
   // 습도
   if (temp > 31 && humidity > 69) {
     if (humidityRec) recommendationText.push(humidityRec);
+  }
+
+  if (
+    weatherIdRec &&
+    !recommendationText.includes(weatherIdRec) &&
+    !recommendationText.includes(windRec) &&
+    !recommendationText.includes(dustRec) &&
+    !recommendationText.includes(tempRec)
+  ) {
+    recommendationText.push(weatherIdRec);
   }
 
   return { weatherMessage, recommendationText };

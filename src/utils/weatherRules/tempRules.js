@@ -25,21 +25,25 @@ const tempRules = [
     min: 34,
     max: 37,
     message: "폭염이에요 진짜 더워요❕",
-    recommendation: "잠깐! 양산챙겨요!",
+    recommendation: "잠깐! 물 마시고 양산챙겨요 😎",
   },
   {
     min: 37,
     max: 100,
     message: "와.. 폭염 그 이상으로 더워요",
-    recommendation: "나가면 녹아요 Stay추천해요",
+    recommendation: "나가면 녹아요 Stay❗️추천해요",
   },
 ];
 
 export const getTempMessage = (temp) => {
   for (const { min, max, message, recommendation } of tempRules) {
     if (temp >= min && temp < max) {
-      return { message, recommendation };
+      const result = { message };
+      if (recommendation) {
+        result.recommendation = recommendation;
+      }
+      return result;
     }
   }
-  return { message: null, recommendation: null };
+  return { message: null };
 };

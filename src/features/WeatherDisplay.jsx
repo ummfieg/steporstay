@@ -1,5 +1,10 @@
 import React from "react";
-import { Degree, DisplayWrapper, RegionWrapper } from "../styles/Weather.style";
+import {
+  ChangeLocationBtn,
+  Degree,
+  DisplayWrapper,
+  RegionWrapper,
+} from "../styles/WeatherDisplay.style";
 
 const now = new Date();
 const month = now.getMonth() + 1;
@@ -12,18 +17,25 @@ const mockDate = {
   content: "현재 기운은 높고, 자외선이 강해요",
 };
 
-const WeatherDisplay = ({ onOpen, weatherDataList, weatherMessage }) => {
-  const { location, temp, weather, content } = weatherDataList[0] || {};
+const WeatherDisplay = ({
+  onOpen,
+  weatherDataList,
+  weatherMessage,
+  onChangeIndex,
+  currentIndex,
+}) => {
+  const { location, temp, weather } = weatherDataList[currentIndex] || {};
   const roundedTemp = Math.round(temp);
-
+  console.log("현재 보여지는 지역", weatherDataList[currentIndex]);
   return (
     <>
       <DisplayWrapper>
         <span>{mockDate.date}</span>
         <span> | </span>
-        <RegionWrapper onClick={onOpen}>
+        <RegionWrapper onClick={onOpen} title="지역 검색">
           <span>{location}</span>
         </RegionWrapper>
+        <ChangeLocationBtn title="지역 변경" onClick={onChangeIndex} />
         <Degree>{roundedTemp}°C</Degree>
         <span>• </span>
         <span>{weatherMessage}</span>

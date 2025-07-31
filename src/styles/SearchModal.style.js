@@ -46,6 +46,9 @@ export const SearchWrapper = styled.div`
     position: absolute;
     left: 90%;
     top: 27%;
+    &:hover {
+      transform: scale(1.1);
+    }
   }
 `;
 
@@ -69,6 +72,7 @@ export const ModalInfoText = styled.p`
   top: 85%;
   left: 50%;
   transform: translateX(-50%);
+  width: 73%;
 `;
 
 export const SelectedLocions = styled.div`
@@ -76,6 +80,7 @@ export const SelectedLocions = styled.div`
   border: none;
   display: flex;
   flex-direction: column;
+  align-items: start;
   gap: 0.6rem;
   position: absolute;
   top: 50%;
@@ -84,7 +89,7 @@ export const SelectedLocions = styled.div`
 
   div {
     display: flex;
-    align-items: center;
+    align-items: end;
     justify-content: center;
     gap: 0.625rem;
   }

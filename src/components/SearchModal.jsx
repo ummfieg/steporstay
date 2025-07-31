@@ -9,14 +9,7 @@ import {
   SelectedLocions,
 } from "../styles/SearchModal.style";
 
-const SearchModal = ({
-  onClose,
-  // inputValue,
-  // onInputChange,
-  locationList,
-  setLocationList,
-  onSearchSubmit,
-}) => {
+const SearchModal = ({ onClose, locationList, onSearchSubmit, onDelete }) => {
   const [input, setInput] = useState("");
   const handleChange = (e) => setInput(e.target.value);
 
@@ -43,15 +36,22 @@ const SearchModal = ({
           <img src="assets/search-icon.svg" onClick={handleSubmit} />
         </SearchWrapper>
         <SelectedLocions>
-          {locationList.map((value, index) => (
-            <div key={index}>
-              <span>{value}</span>
-              <img src="assets/x-button.svg" />
+          {locationList.map((value, id) => (
+            <div key={value.id}>
+              <span>{value.name}</span>
+              {value.id !== 1835848 && (
+                <img
+                  src="assets/x-button.svg"
+                  onClick={() => onDelete(value.id)}
+                />
+              )}
             </div>
           ))}
         </SelectedLocions>
 
-        <ModalInfoText>지역은 3개까지 추가할 수 있어요!</ModalInfoText>
+        <ModalInfoText>
+          기본지역은 서울이며, 추가로 2개까지 선택할 수 있어요!
+        </ModalInfoText>
       </Modal>
     </ModalOverlay>
   );
