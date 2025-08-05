@@ -65,6 +65,12 @@ export const SearchBar = styled.input`
   }
 `;
 
+export const InfoText = styled.span`
+  font-size: 0.59rem;
+  color: ${(props) => (props.$isError ? "#FF605B" : "var(--secondary)")};
+  padding: 0px 4px;
+`;
+
 export const ModalInfoText = styled.p`
   font-size: 0.7rem;
   color: var(--secondary);
