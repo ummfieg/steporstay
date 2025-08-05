@@ -21,10 +21,6 @@ export const Logo = styled.div`
     color: var(--logo);
     text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.5);
     text-align: center;
-    cursor: pointer;
-  }
-  span:not(:first-child):not(:last-child) {
-    cursor: default;
   }
 `;
 

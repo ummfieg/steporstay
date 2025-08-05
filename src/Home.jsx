@@ -31,10 +31,6 @@ const Home = () => {
     humidity,
   });
 
-  useEffect(() => {
-    handleSearchSubmit("서울");
-  }, []);
-
   const getWeatherInfo = async (cityName) => {
     const getLatLon = async (cityName) => {
       const response = await fetch(
@@ -108,6 +104,31 @@ const Home = () => {
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+
+  useEffect(() => {
+    const stored = localStorage.getItem("weatherData");
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        setWeatherDataList(parsed);
+        setLocationList(parsed.map((d) => ({ id: d.id, name: d.location })));
+      } catch (e) {
+        console.error("localStorage 파싱 에러", e);
+      }
+    } else {
+      handleSearchSubmit("서울");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (weatherDataList.length === 0) return;
+
+    try {
+      localStorage.setItem("weatherData", JSON.stringify(weatherDataList));
+    } catch (e) {
+      console.error("localStorage 저장 에러", e);
+    }
+  }, [weatherDataList]);
 
   const handleSearchSubmit = async (locationName) => {
     if (locationList.length >= 3) {

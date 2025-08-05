@@ -27,6 +27,7 @@ const WeatherDisplay = ({
   const { location, temp, weather } = weatherDataList[currentIndex] || {};
   const roundedTemp = Math.round(temp);
   console.log("현재 보여지는 지역", weatherDataList[currentIndex]);
+
   return (
     <>
       <DisplayWrapper>
@@ -37,8 +38,9 @@ const WeatherDisplay = ({
         </RegionWrapper>
         <ChangeLocationBtn title="지역 변경" onClick={onChangeIndex} />
         <Degree>{roundedTemp}°C</Degree>
+        <span>{weatherMessage[0]}</span>
         <span>• </span>
-        <span>{weatherMessage}</span>
+        <span>{weatherMessage.slice(1).join(" ")}</span>
       </DisplayWrapper>
     </>
   );
