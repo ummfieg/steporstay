@@ -17,7 +17,10 @@ const Home = () => {
   const [locationList, setLocationList] = useState([]);
   const [weatherDataList, setWeatherDataList] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(() => {
+    const saved = localStorage.getItem("lastViewedIndex");
+    return saved !== null ? Number(saved) : 0;
+  });
   const { temp, pm2_5, weather, weatherId, visibility, wind, humidity } =
     weatherDataList[currentIndex] || {};
 
@@ -151,8 +154,14 @@ const Home = () => {
   };
 
   const handleChangeIndex = () => {
+    if (weatherDataList.length === 0) return;
     setCurrentIndex((prev) => (prev + 1) % weatherDataList.length);
   };
+
+  useEffect(() => {
+    localStorage.setItem("lastViewedIndex", String(currentIndex));
+    console.log(currentIndex);
+  }, [currentIndex]);
 
   const handleDeleteAndUpdate = (idToDelete) => {
     const newLocationList = locationList.filter((loc) => loc.id !== idToDelete);
