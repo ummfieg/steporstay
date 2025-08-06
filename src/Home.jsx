@@ -21,6 +21,7 @@ const Home = () => {
     const saved = localStorage.getItem("lastViewedIndex");
     return saved !== null ? Number(saved) : 0;
   });
+  const [apiErrorMessage, setApiErrorMessage] = useState(false);
   const { temp, pm2_5, weather, weatherId, visibility, wind, humidity } =
     weatherDataList[currentIndex] || {};
 
@@ -148,8 +149,10 @@ const Home = () => {
         ...prev,
         { id: resWeatherData.id, name: resWeatherData.location },
       ]);
+      setApiErrorMessage(false);
     } catch (err) {
       console.error("검색 실패:", err);
+      setApiErrorMessage(true);
     }
   };
 
@@ -210,6 +213,7 @@ const Home = () => {
           setLocationList={setLocationList}
           onSearchSubmit={handleSearchSubmit}
           onDelete={handleDeleteAndUpdate}
+          apiErrorMessage={apiErrorMessage}
         />
       )}
     </Wrapper>

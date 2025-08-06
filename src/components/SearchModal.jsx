@@ -10,7 +10,13 @@ import {
   InfoText,
 } from "../styles/SearchModal.style";
 
-const SearchModal = ({ onClose, locationList, onSearchSubmit, onDelete }) => {
+const SearchModal = ({
+  onClose,
+  locationList,
+  onSearchSubmit,
+  onDelete,
+  apiErrorMessage,
+}) => {
   const [input, setInput] = useState("");
   const [isError, setIsError] = useState(false);
   const handleChange = (e) => setInput(e.target.value);
@@ -45,8 +51,8 @@ const SearchModal = ({ onClose, locationList, onSearchSubmit, onDelete }) => {
           <img src="assets/search-icon.svg" onClick={handleSubmit} />
         </SearchWrapper>
 
-        <InfoText $isError={isError}>
-          {isError
+        <InfoText $isError={isError || apiErrorMessage}>
+          {isError || apiErrorMessage
             ? "❗️ 해당 지역이 없어요 ❗️"
             : "* 날씨 정보는 관측소 기준으로, 검색 지역의 날씨 정보가 다를 수 있어요."}
         </InfoText>
