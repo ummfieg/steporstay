@@ -66,9 +66,10 @@ export const SearchBar = styled.input`
 `;
 
 export const InfoText = styled.span`
-  font-size: 0.59rem;
+  font-size: 0.65rem;
   color: ${(props) => (props.$isError ? "#FF605B" : "var(--secondary)")};
   padding: 0px 4px;
+  transition: all 0.3s ease-in-out;
 `;
 
 export const ModalInfoText = styled.p`

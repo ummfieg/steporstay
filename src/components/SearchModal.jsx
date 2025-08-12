@@ -15,7 +15,8 @@ const SearchModal = ({
   locationList,
   onSearchSubmit,
   onDelete,
-  apiErrorMessage,
+  errorMessage,
+  setErrorMessage,
 }) => {
   const [input, setInput] = useState("");
   const [isError, setIsError] = useState(false);
@@ -26,10 +27,10 @@ const SearchModal = ({
     const trimmed = input.trim();
 
     if (trimmed.length < 2 || !/^[가-힣]+$/.test(trimmed)) {
-      setIsError(true);
+      setErrorMessage("input");
       return;
     }
-    setIsError(false);
+    setErrorMessage(null);
     onSearchSubmit(trimmed);
     setInput("");
   };
@@ -51,10 +52,11 @@ const SearchModal = ({
           <img src="assets/search-icon.svg" onClick={handleSubmit} />
         </SearchWrapper>
 
-        <InfoText $isError={isError || apiErrorMessage}>
-          {isError || apiErrorMessage
-            ? "❗️ 해당 지역이 없어요 ❗️"
-            : "* 날씨 정보는 관측소 기준으로, 검색 지역의 날씨 정보가 다를 수 있어요."}
+        <InfoText $isError={!!errorMessage}>
+          {errorMessage === "input" && "올바른 지역명을 입력해주세요!"}
+          {errorMessage === "api" && "해당 지역의 날씨 정보가 없어요 🔍❗️"}
+          {!errorMessage &&
+            "* 날씨 정보는 관측소 기준으로, 검색 지역과 다를 수 있어요."}
         </InfoText>
 
         <SelectedLocions>

@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   Logo,
   StayIcon,
@@ -6,6 +8,11 @@ import {
   TextBubble,
   Wrapper,
   WindowImgWrapper,
+  LogoText,
+  LogoSub,
+  KeyIcon,
+  CircleIcon,
+  IconWrapper,
 } from "./styles/Home.style";
 import WeatherDisplay from "./features/WeatherDisplay";
 import SearchModal from "./components/SearchModal";
@@ -21,7 +28,21 @@ const Home = () => {
     const saved = localStorage.getItem("lastViewedIndex");
     return saved !== null ? Number(saved) : 0;
   });
-  const [apiErrorMessage, setApiErrorMessage] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [logoMain, setLogoMain] = useState("Step Or Stay?");
+  const [logoSub, setLogoSub] = useState("");
+  const [clicked, setClicked] = useState(false);
+  const [stepRecord, setStepRecord] = useState(() => {
+    const saved = localStorage.getItem("userAction");
+    return saved
+      ? JSON.parse(saved).map((item) => ({
+          ...item,
+          date: new Date(item.date), // 문자열을 Date 객체로 변환
+        }))
+      : [];
+  });
+  const [actionMessage, setActionMessage] = useState("");
+
   const { temp, pm2_5, weather, weatherId, visibility, wind, humidity } =
     weatherDataList[currentIndex] || {};
 
@@ -133,7 +154,14 @@ const Home = () => {
       console.error("localStorage 저장 에러", e);
     }
   }, [weatherDataList]);
-
+  useEffect(() => {
+    if (errorMessage) {
+      const timer = setTimeout(() => {
+        setErrorMessage(null);
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [errorMessage]);
   const handleSearchSubmit = async (locationName) => {
     if (locationList.length >= 3) {
       return;
@@ -149,12 +177,16 @@ const Home = () => {
         ...prev,
         { id: resWeatherData.id, name: resWeatherData.location },
       ]);
-      setApiErrorMessage(false);
+      setErrorMessage(null);
     } catch (err) {
       console.error("검색 실패:", err);
-      setApiErrorMessage(true);
+      setErrorMessage("api");
     }
   };
+
+  useEffect(() => {
+    localStorage.setItem("userAction", JSON.stringify(stepRecord));
+  }, [stepRecord]);
 
   const handleChangeIndex = () => {
     if (weatherDataList.length === 0) return;
@@ -184,20 +216,96 @@ const Home = () => {
       setCurrentIndex(newLocationList.length - 1);
     }
   };
+  const handleIconClick = (e) => {
+    const type = e.target.dataset.type;
+    if (type === "step") {
+      setLogoMain("🏃🏻Step");
+      setLogoSub("마음바꾸기");
+    } else if (type === "stay") {
+      setLogoMain("🛋️ Stay");
+      setLogoSub("마음바꾸기");
+    }
+    setClicked(true);
+  };
+
+  const handleChangeMind = () => {
+    setLogoMain("Step Or Stay?");
+    setClicked(false);
+    setLogoSub("");
+  };
+
+  const handleActionClick = (e) => {
+    const action = e.target.dataset.type;
+    if (action === "step")
+      updateStepRecord(1, "오늘의 날씨는 Step! 가볼까? 🏃‍♀️🏃🏻");
+    else if (action === "stay")
+      updateStepRecord(0, "오늘의 날씨는 Stay! 이불밖은 위험해 💨");
+  };
+
+  const updateStepRecord = (count, message) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    setStepRecord((prev) => {
+      const existsIndex = prev.findIndex(
+        (item) => item.date.getTime() === today.getTime()
+      );
+
+      if (existsIndex !== -1) {
+        const newRecords = [...prev];
+        newRecords[existsIndex] = { date: today, count };
+        return newRecords;
+      }
+      return [...prev, { date: today, count }];
+    });
+
+    setActionMessage(message);
+    toast(message);
+  };
+
+  const handleClickRecord = () => {
+    return `이번 주 7일 중 ${count}번 외출 했어요!`;
+  };
 
   return (
     <Wrapper>
       <Logo>
-        <span>Step</span>
-        <span>Or</span>
-        <span>Stay?</span>
+        <LogoText $clicked={clicked}>{logoMain}</LogoText>
+        {logoSub && <LogoSub onClick={handleChangeMind}>{logoSub}</LogoSub>}
       </Logo>
       <WindowImgWrapper>
-        <StepIcon />
-        <StayIcon />
+        <div
+          onClick={(e) => {
+            handleIconClick(e);
+            handleActionClick(e);
+          }}
+        >
+          <StepIcon data-type="step" />
+          <StayIcon data-type="stay" />
+        </div>
+        <KeyIcon />
+        <IconWrapper>
+          <CircleIcon />
+          <CircleIcon />
+          <CircleIcon />
+        </IconWrapper>
+
         <TextBubble>
           <span>{recommendationText}</span>
         </TextBubble>
+        <ToastContainer
+          position="bottom-center"
+          autoClose={2000}
+          limit={1}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick={false}
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+        />
       </WindowImgWrapper>
       <WeatherDisplay
         onOpen={openModal}
@@ -213,7 +321,8 @@ const Home = () => {
           setLocationList={setLocationList}
           onSearchSubmit={handleSearchSubmit}
           onDelete={handleDeleteAndUpdate}
-          apiErrorMessage={apiErrorMessage}
+          errorMessage={errorMessage}
+          setErrorMessage={setErrorMessage}
         />
       )}
     </Wrapper>
