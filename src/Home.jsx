@@ -184,10 +184,6 @@ const Home = () => {
     }
   };
 
-  useEffect(() => {
-    localStorage.setItem("userAction", JSON.stringify(stepRecord));
-  }, [stepRecord]);
-
   const handleChangeIndex = () => {
     if (weatherDataList.length === 0) return;
     setCurrentIndex((prev) => (prev + 1) % weatherDataList.length);
@@ -242,29 +238,57 @@ const Home = () => {
       updateStepRecord(0, "오늘의 날씨는 Stay! 이불밖은 위험해 💨");
   };
 
+  const getThisWeek = () => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const rawDay = today.getDay();
+    const day = rawDay === 0 ? 6 : rawDay - 1;
+
+    const monday = new Date(today);
+    monday.setDate(today.getDate() - day);
+
+    const sunday = new Date(monday);
+    sunday.setDate(monday.getDate() + 6);
+    console.log(`이번주 월${monday}, 이번주 일${sunday}`);
+    return { monday, sunday };
+  };
+
   const updateStepRecord = (count, message) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    setStepRecord((prev) => {
-      const existsIndex = prev.findIndex(
-        (item) => item.date.getTime() === today.getTime()
-      );
+    const { monday, sunday } = getThisWeek();
 
-      if (existsIndex !== -1) {
-        const newRecords = [...prev];
-        newRecords[existsIndex] = { date: today, count };
+    if (today >= monday && today <= sunday) {
+      setStepRecord((prev) => {
+        const existsIndex = prev.findIndex(
+          (item) => item.date.getTime() === today.getTime()
+        );
+        let newRecords;
+        if (existsIndex !== -1) {
+          newRecords = [...prev];
+          newRecords[existsIndex] = { date: today, count };
+          return newRecords;
+        } else {
+          newRecords = [...prev, { date: today, count }];
+        }
+        localStorage.setItem("userAction", JSON.stringify(newRecords));
         return newRecords;
-      }
-      return [...prev, { date: today, count }];
-    });
-
-    setActionMessage(message);
-    toast(message);
+      });
+      setActionMessage(message);
+      toast(message);
+    }
   };
 
   const handleClickRecord = () => {
-    return `이번 주 7일 중 ${count}번 외출 했어요!`;
+    const totalCount = stepRecord.reduce((sum, { count }) => sum + count, 0);
+    if (totalCount === 0) {
+      toast(`아직 이번주는 0 STEP! `);
+    }
+    if (totalCount >= 1) {
+      toast(`이번주 중에는 ${totalCount} step 했어요!`);
+    }
+    console.log(`이번주 총 ${totalCount} step 했어요!`);
   };
 
   return (
@@ -283,7 +307,7 @@ const Home = () => {
           <StepIcon data-type="step" />
           <StayIcon data-type="stay" />
         </div>
-        <KeyIcon />
+        <KeyIcon onClick={handleClickRecord} />
         <IconWrapper>
           <CircleIcon />
           <CircleIcon />
