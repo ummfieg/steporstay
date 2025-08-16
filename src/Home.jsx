@@ -42,6 +42,7 @@ const Home = () => {
       : [];
   });
   const [actionMessage, setActionMessage] = useState("");
+  const [clickedActionType, setClickedActionType] = useState(null);
 
   const { temp, pm2_5, weather, weatherId, visibility, wind, humidity } =
     weatherDataList[currentIndex] || {};
@@ -212,12 +213,23 @@ const Home = () => {
       setCurrentIndex(newLocationList.length - 1);
     }
   };
+
+  // useEffect(() => {
+  //   if (!weatherDataList.length) return;
+  //   const cityName = weatherDataList[currentIndex].location;
+  //   console.log(cityName);
+  //   getWeatherInfo("광주");
+  //   console.log("호출날씨 인덱스", weatherDataList[currentIndex]);
+  // }, [currentIndex]);
+
   const handleIconClick = (e) => {
     const type = e.target.dataset.type;
     if (type === "step") {
+      setClickedActionType(type);
       setLogoMain("🏃🏻Step");
       setLogoSub("마음바꾸기");
     } else if (type === "stay") {
+      setClickedActionType(type);
       setLogoMain("🛋️ Stay");
       setLogoSub("마음바꾸기");
     }
@@ -228,6 +240,8 @@ const Home = () => {
     setLogoMain("Step Or Stay?");
     setClicked(false);
     setLogoSub("");
+    updateStepRecord(0);
+    setClickedActionType(null);
   };
 
   const handleActionClick = (e) => {
@@ -264,10 +278,12 @@ const Home = () => {
         const existsIndex = prev.findIndex(
           (item) => item.date.getTime() === today.getTime()
         );
+
         let newRecords;
         if (existsIndex !== -1) {
           newRecords = [...prev];
           newRecords[existsIndex] = { date: today, count };
+
           return newRecords;
         } else {
           newRecords = [...prev, { date: today, count }];
@@ -276,7 +292,7 @@ const Home = () => {
         return newRecords;
       });
       setActionMessage(message);
-      toast(message);
+      if (message) toast(message);
     }
   };
 
@@ -304,8 +320,8 @@ const Home = () => {
             handleActionClick(e);
           }}
         >
-          <StepIcon data-type="step" />
-          <StayIcon data-type="stay" />
+          <StepIcon data-type="step" disabled={clickedActionType === "stay"} />
+          <StayIcon data-type="stay" disabled={clickedActionType === "step"} />
         </div>
         <KeyIcon onClick={handleClickRecord} />
         <IconWrapper>

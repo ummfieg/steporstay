@@ -29,6 +29,7 @@ export const LogoText = styled.span`
 export const LogoSub = styled.span`
   color: var(--placeholder);
   font-size: 0.8rem;
+  opacity: 0.6;
   cursor: pointer;
 `;
 export const WindowImgWrapper = styled.div`
@@ -55,11 +56,13 @@ export const IconWrapper = styled.div`
   }
 `;
 
-export const StepIcon = styled.div`
+export const StepIcon = styled.button`
   background-image: url("assets/step-icon.svg");
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
+  border: none;
+  background-color: transparent;
   width: 40px;
   height: 112px;
   cursor: pointer;
@@ -70,13 +73,18 @@ export const StepIcon = styled.div`
   &:hover {
     transform: scale(1.1);
   }
+  pointer-events: ${(props) => (props.disabled ? "none" : "auto")};
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
+  opacity: ${(props) => (props.disabled ? 0.6 : 1)};
 `;
 
-export const StayIcon = styled.div`
+export const StayIcon = styled.button`
   background-image: url("assets/stay-icon.svg");
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
+  border: none;
+  background-color: transparent;
   width: 40px;
   height: 112px;
   cursor: pointer;
@@ -87,6 +95,9 @@ export const StayIcon = styled.div`
   &:hover {
     transform: scale(1.1);
   }
+  pointer-events: ${(props) => (props.disabled ? "none" : "auto")};
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
+  opacity: ${(props) => (props.disabled ? 0.6 : 1)};
 `;
 export const KeyIcon = styled.div`
   background-image: url("assets/key-icon.svg");
