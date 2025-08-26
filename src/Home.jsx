@@ -17,6 +17,7 @@ import {
 import WeatherDisplay from "./features/WeatherDisplay";
 import SearchModal from "./components/SearchModal";
 import { getCombineMessage } from "./utils/combineWeatherMessage";
+import { locationMapping } from "./utils/locationMapping";
 const weatherKey = import.meta.env.VITE_WEATHER_API_KEY;
 const kakaoKey = import.meta.env.VITE_KAKAO_API_KEY;
 
@@ -34,13 +35,9 @@ const Home = () => {
   const [clicked, setClicked] = useState(false);
   const [stepRecord, setStepRecord] = useState(() => {
     const saved = localStorage.getItem("userAction");
-    return saved
-      ? JSON.parse(saved).map((item) => ({
-          ...item,
-          date: new Date(item.date), // 문자열을 Date 객체로 변환
-        }))
-      : [];
+    return saved ? JSON.parse(saved) : [];
   });
+
   const [actionMessage, setActionMessage] = useState("");
   const [clickedActionType, setClickedActionType] = useState(null);
 
@@ -57,7 +54,7 @@ const Home = () => {
     humidity,
   });
 
-  const getWeatherInfo = async (cityName) => {
+  const getWeatherInfo = async (cityName, uiName) => {
     const getLatLon = async (cityName) => {
       const response = await fetch(
         `https://dapi.kakao.com/v2/local/search/address.json?query=${cityName}`,
@@ -68,14 +65,14 @@ const Home = () => {
         }
       );
 
-      console.log(response.status);
+      // console.log(response.status);
       const data = await response.json();
 
       if (!data.documents || data.documents.length === 0) {
         throw new Error("좌표 정보가 없습니다.");
       }
       const { x, y } = data.documents[0];
-      console.log("좌표", x, y);
+      console.log(`좌표 ${x}/${y}`);
       return {
         lon: parseFloat(x),
         lat: parseFloat(y),
@@ -93,7 +90,7 @@ const Home = () => {
 
       const weatherData = await weatherRes.json();
       const airData = await airRes.json();
-
+      console.log("날씨데이터", weatherData);
       if (
         !weatherData ||
         !weatherData.weather ||
@@ -101,13 +98,10 @@ const Home = () => {
       ) {
         throw new Error("날씨 데이터가 없습니다.");
       }
-
-      console.log("날씨:", weatherData);
-      console.log("미세먼지:", airData);
-
       return {
         id: weatherData.id,
-        location: weatherData.name,
+        apiName: weatherData.name,
+        uiName: uiName,
         temp: weatherData.main.temp,
         visibility: weatherData.visibility,
         weather: weatherData.weather.map((w) => w.main),
@@ -116,15 +110,13 @@ const Home = () => {
         wind: weatherData.wind.speed,
         pm2_5: airData.list[0].components.pm2_5,
         aqi: airData.list[0].main.aqi,
+        updatedTime: Date.now(),
       };
-
-      const lastLocation = locationList[locationList.length - 1];
-      console.log("현재 불러온 지역", lastLocation);
     };
 
     const { lat, lon } = await getLatLon(cityName);
     const resWeatehrData = await getLocation(lat, lon);
-
+    console.log(resWeatehrData);
     return resWeatehrData;
   };
 
@@ -137,12 +129,15 @@ const Home = () => {
       try {
         const parsed = JSON.parse(stored);
         setWeatherDataList(parsed);
-        setLocationList(parsed.map((d) => ({ id: d.id, name: d.location })));
+        console.log(parsed);
+        setLocationList(
+          parsed.map((d) => ({ id: d.id, name: d.location || d.uiName }))
+        );
       } catch (e) {
         console.error("localStorage 파싱 에러", e);
       }
     } else {
-      handleSearchSubmit("서울");
+      handleSearchSubmit({ cityName: "서울", uiName: "서울" });
     }
   }, []);
 
@@ -155,6 +150,7 @@ const Home = () => {
       console.error("localStorage 저장 에러", e);
     }
   }, [weatherDataList]);
+
   useEffect(() => {
     if (errorMessage) {
       const timer = setTimeout(() => {
@@ -163,12 +159,14 @@ const Home = () => {
       return () => clearTimeout(timer);
     }
   }, [errorMessage]);
-  const handleSearchSubmit = async (locationName) => {
+
+  const handleSearchSubmit = async ({ cityName, uiName }) => {
     if (locationList.length >= 3) {
       return;
     }
     try {
-      const resWeatherData = await getWeatherInfo(locationName);
+      const resWeatherData = await getWeatherInfo(cityName, uiName);
+      console.log(resWeatherData, "지역명가공데이터");
       if (locationList.some((loc) => loc.id === resWeatherData.id)) {
         return;
       }
@@ -176,7 +174,7 @@ const Home = () => {
       setWeatherDataList((prev) => [...prev, resWeatherData]);
       setLocationList((prev) => [
         ...prev,
-        { id: resWeatherData.id, name: resWeatherData.location },
+        { id: resWeatherData.id, name: uiName },
       ]);
       setErrorMessage(null);
     } catch (err) {
@@ -192,7 +190,6 @@ const Home = () => {
 
   useEffect(() => {
     localStorage.setItem("lastViewedIndex", String(currentIndex));
-    console.log(currentIndex);
   }, [currentIndex]);
 
   const handleDeleteAndUpdate = (idToDelete) => {
@@ -263,30 +260,45 @@ const Home = () => {
 
     const sunday = new Date(monday);
     sunday.setDate(monday.getDate() + 6);
-    console.log(`이번주 월${monday}, 이번주 일${sunday}`);
-    return { monday, sunday };
+
+    const mondayStr =
+      monday.getFullYear() +
+      "-" +
+      String(monday.getMonth() + 1).padStart(2, "0") +
+      "-" +
+      String(monday.getDate()).padStart(2, "0");
+    const sundayStr =
+      sunday.getFullYear() +
+      "-" +
+      String(sunday.getMonth() + 1).padStart(2, "0") +
+      "-" +
+      String(sunday.getDate()).padStart(2, "0");
+
+    return { mondayStr, sundayStr };
   };
 
   const updateStepRecord = (count, message) => {
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const dateStr =
+      today.getFullYear() +
+      "-" +
+      String(today.getMonth() + 1).padStart(2, "0") +
+      "-" +
+      String(today.getDate()).padStart(2, "0");
 
-    const { monday, sunday } = getThisWeek();
+    const { mondayStr, sundayStr } = getThisWeek();
 
-    if (today >= monday && today <= sunday) {
+    if (dateStr >= mondayStr && dateStr <= sundayStr) {
       setStepRecord((prev) => {
-        const existsIndex = prev.findIndex(
-          (item) => item.date.getTime() === today.getTime()
-        );
-
+        const existsIndex = prev.findIndex((item) => item.date === dateStr);
         let newRecords;
         if (existsIndex !== -1) {
           newRecords = [...prev];
-          newRecords[existsIndex] = { date: today, count };
+          newRecords[existsIndex] = { date: dateStr, count };
 
           return newRecords;
         } else {
-          newRecords = [...prev, { date: today, count }];
+          newRecords = [...prev, { date: dateStr, count }];
         }
         localStorage.setItem("userAction", JSON.stringify(newRecords));
         return newRecords;

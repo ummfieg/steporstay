@@ -24,9 +24,9 @@ const WeatherDisplay = ({
   onChangeIndex,
   currentIndex,
 }) => {
-  const { location, temp, weather } = weatherDataList[currentIndex] || {};
+  const { location, temp, weather, uiName } =
+    weatherDataList[currentIndex] || {};
   const roundedTemp = Math.round(temp);
-  console.log("현재 보여지는 지역", weatherDataList[currentIndex]);
 
   return (
     <>
@@ -34,7 +34,7 @@ const WeatherDisplay = ({
         <span>{mockDate.date}</span>
         <span> | </span>
         <RegionWrapper onClick={onOpen} title="지역 검색">
-          <span>{location}</span>
+          <span>{location || uiName}</span>
         </RegionWrapper>
         <ChangeLocationBtn title="지역 변경" onClick={onChangeIndex} />
         <Degree>{roundedTemp}°C</Degree>
