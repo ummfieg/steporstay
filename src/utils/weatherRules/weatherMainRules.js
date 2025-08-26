@@ -21,7 +21,6 @@ const weatherMainRules = [
 export const getWeatherMainMessage = (weatherMainArray) => {
   for (const { main, message } of weatherMainRules) {
     if (weatherMainArray.includes(main)) {
-      console.log("메인날씨?", main);
       return { message };
     }
   }

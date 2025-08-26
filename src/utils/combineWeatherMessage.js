@@ -34,10 +34,6 @@ export const getCombineMessage = ({
   const weatherMainList = weather.map((w) => w.main).join(",");
   const weatherMessage = [];
   const recommendationText = [];
-  console.log(temp, "온도..");
-  console.log("지금지역 날씨", weather);
-  console.log("날씨메세지", weatherMainMessage);
-  console.log("추천행동", recommendationText);
 
   // 일반 날씨 (기본반영)
   if (weatherMainMessage) weatherMessage.push(weatherMainMessage);
@@ -66,7 +62,7 @@ export const getCombineMessage = ({
   }
 
   // 습도
-  if (temp > 31 && humidity > 69) {
+  if ((temp > 31 && humidity > 69) || humidity > 72) {
     if (humidityRec) recommendationText.push(humidityRec);
   }
 

@@ -9,7 +9,7 @@ import {
   SelectedLocions,
   InfoText,
 } from "../styles/SearchModal.style";
-
+import { locationMapping } from "../utils/locationMapping";
 const SearchModal = ({
   onClose,
   locationList,
@@ -21,17 +21,23 @@ const SearchModal = ({
   const [input, setInput] = useState("");
   const [isError, setIsError] = useState(false);
   const handleChange = (e) => setInput(e.target.value);
-
+  console.log(locationList, "지역리스트");
   const handleSubmit = (e) => {
     e.preventDefault();
-    const trimmed = input.trim();
+    // const trimmed = input.trim();
+    let trimmed = input.trim();
 
     if (trimmed.length < 2 || !/^[가-힣]+$/.test(trimmed)) {
       setErrorMessage("input");
       return;
     }
     setErrorMessage(null);
-    onSearchSubmit(trimmed);
+    // onSearchSubmit(trimmed);
+    onSearchSubmit({
+      cityName: locationMapping[trimmed]?.cityName || trimmed,
+      uiName: locationMapping[trimmed]?.uiName || trimmed,
+    });
+
     setInput("");
   };
 
