@@ -19,7 +19,7 @@ const tempRules = [
     min: 31,
     max: 34,
     message: "헥 날씨가 너무 더워요;",
-    recommendation: "수분 보충필수에요!🥤",
+    recommendation: "썬크림🌞 수분 보충필수!🥤",
   },
   {
     min: 34,

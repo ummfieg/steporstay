@@ -97,7 +97,7 @@ const weatherIdRules = [
   },
   {
     ids: [803, 804],
-    recommendation: "구름이 많아 흐린 느낌이에요. 햇살이 가릴 수도 있어요 🌥️🙂",
+    recommendation: "구름이 많아 흐린 느낌이에요 🌥️ ",
   },
 ];
 
