@@ -21,7 +21,7 @@ const SearchModal = ({
   const [input, setInput] = useState("");
   const [isError, setIsError] = useState(false);
   const handleChange = (e) => setInput(e.target.value);
-  console.log(locationList, "지역리스트");
+
   const handleSubmit = (e) => {
     e.preventDefault();
     // const trimmed = input.trim();
@@ -67,14 +67,16 @@ const SearchModal = ({
 
         <SelectedLocions>
           {locationList.map((value, id) => (
-            <div key={value.id}>
+            <div key={`${value.id}-${value.name}`}>
               <span>{value.name}</span>
-              {value.id !== 1835848 && (
-                <img
-                  src="assets/x-button.svg"
-                  onClick={() => onDelete(value.id)}
-                />
-              )}
+              {value.id !== 1835848 &&
+                value.name !==
+                  "서울"(
+                    <img
+                      src="assets/x-button.svg"
+                      onClick={() => onDelete(value.id)}
+                    />
+                  )}
             </div>
           ))}
         </SelectedLocions>

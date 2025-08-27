@@ -65,14 +65,12 @@ const Home = () => {
         }
       );
 
-      // console.log(response.status);
       const data = await response.json();
 
       if (!data.documents || data.documents.length === 0) {
         throw new Error("좌표 정보가 없습니다.");
       }
       const { x, y } = data.documents[0];
-      console.log(`좌표 ${x}/${y}`);
       return {
         lon: parseFloat(x),
         lat: parseFloat(y),
@@ -90,7 +88,6 @@ const Home = () => {
 
       const weatherData = await weatherRes.json();
       const airData = await airRes.json();
-      console.log("날씨데이터", weatherData);
       if (
         !weatherData ||
         !weatherData.weather ||
@@ -102,6 +99,7 @@ const Home = () => {
         id: weatherData.id,
         apiName: weatherData.name,
         uiName: uiName,
+        cityName: cityName,
         temp: weatherData.main.temp,
         visibility: weatherData.visibility,
         weather: weatherData.weather.map((w) => w.main),
@@ -116,7 +114,7 @@ const Home = () => {
 
     const { lat, lon } = await getLatLon(cityName);
     const resWeatehrData = await getLocation(lat, lon);
-    console.log(resWeatehrData);
+
     return resWeatehrData;
   };
 
@@ -129,7 +127,7 @@ const Home = () => {
       try {
         const parsed = JSON.parse(stored);
         setWeatherDataList(parsed);
-        console.log(parsed);
+
         setLocationList(
           parsed.map((d) => ({ id: d.id, name: d.location || d.uiName }))
         );
@@ -160,22 +158,57 @@ const Home = () => {
     }
   }, [errorMessage]);
 
+  useEffect(() => {
+    if (weatherDataList.length === 0) return;
+    const intervalId = setInterval(() => {
+      const nowTime = Date.now();
+
+      weatherDataList.forEach((data) => {
+        if (nowTime - data.updatedTime > 15 * 60 * 1000) {
+          handleSearchSubmit({ cityName: data.cityName, uiName: data.uiName });
+        }
+      });
+    }, 60 * 1000);
+    return () => clearInterval(intervalId);
+  }, [weatherDataList]);
+
   const handleSearchSubmit = async ({ cityName, uiName }) => {
-    if (locationList.length >= 3) {
+    const nowTime = Date.now();
+
+    const existing = weatherDataList.find(
+      (data) => data.cityName === cityName && data.uiName === uiName
+    );
+
+    if (existing && nowTime - existing.updatedTime < 15 * 60 * 1000) {
       return;
     }
+
+    if (!existing && locationList.length >= 3) {
+      return;
+    }
+
     try {
       const resWeatherData = await getWeatherInfo(cityName, uiName);
-      console.log(resWeatherData, "지역명가공데이터");
-      if (locationList.some((loc) => loc.id === resWeatherData.id)) {
-        return;
+
+      if (existing) {
+        setWeatherDataList((prev) =>
+          prev.map((data) =>
+            data.cityName === cityName && data.uiName === uiName
+              ? { ...resWeatherData, updatedTime: nowTime }
+              : data
+          )
+        );
+      } else {
+        setWeatherDataList((prev) => [
+          ...prev,
+          { ...resWeatherData, updatedTime: nowTime },
+        ]);
+        setLocationList((prev) => [
+          ...prev,
+          { id: resWeatherData.id, name: uiName },
+        ]);
       }
 
-      setWeatherDataList((prev) => [...prev, resWeatherData]);
-      setLocationList((prev) => [
-        ...prev,
-        { id: resWeatherData.id, name: uiName },
-      ]);
       setErrorMessage(null);
     } catch (err) {
       console.error("검색 실패:", err);
@@ -210,14 +243,6 @@ const Home = () => {
       setCurrentIndex(newLocationList.length - 1);
     }
   };
-
-  // useEffect(() => {
-  //   if (!weatherDataList.length) return;
-  //   const cityName = weatherDataList[currentIndex].location;
-  //   console.log(cityName);
-  //   getWeatherInfo("광주");
-  //   console.log("호출날씨 인덱스", weatherDataList[currentIndex]);
-  // }, [currentIndex]);
 
   const handleIconClick = (e) => {
     const type = e.target.dataset.type;
@@ -316,7 +341,6 @@ const Home = () => {
     if (totalCount >= 1) {
       toast(`이번주 중에는 ${totalCount} step 했어요!`);
     }
-    console.log(`이번주 총 ${totalCount} step 했어요!`);
   };
 
   return (
