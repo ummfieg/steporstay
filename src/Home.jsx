@@ -225,17 +225,30 @@ const Home = () => {
     localStorage.setItem("lastViewedIndex", String(currentIndex));
   }, [currentIndex]);
 
-  const handleDeleteAndUpdate = (idToDelete) => {
-    const newLocationList = locationList.filter((loc) => loc.id !== idToDelete);
-    const newWeatherDataList = weatherDataList.filter(
-      (data) => data.id !== idToDelete
+  // id 기준 수정하기
+  const handleDeleteAndUpdate = (idToDelete, nameToDelete) => {
+    console.log("삭제할값", idToDelete, nameToDelete);
+    const newLocationList = locationList.filter(
+      (loc) =>
+        !(
+          loc.id === idToDelete &&
+          loc.name === nameToDelete &&
+          !(loc.id === 1835848 && loc.name === "서울")
+        )
     );
-
+    const newWeatherDataList = weatherDataList.filter(
+      (data) =>
+        !(
+          data.id === idToDelete &&
+          data.uiName === nameToDelete &&
+          !(data.id === 1835848 && data.uiName === "서울")
+        )
+    );
     setLocationList(newLocationList);
     setWeatherDataList(newWeatherDataList);
 
     const deletedIndex = weatherDataList.findIndex(
-      (data) => data.id === idToDelete
+      (data) => data.id === idToDelete && data.uiName === nameToDelete
     );
     if (deletedIndex === currentIndex) {
       setCurrentIndex(0);
