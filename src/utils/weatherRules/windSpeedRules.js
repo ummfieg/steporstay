@@ -2,12 +2,12 @@ const windSpeedRules = [
   { min: 0, max: 3, message: "바람은? 느껴지지않아요", recommendation: "" },
   {
     min: 4,
-    max: 6,
-    message: "살랑 바람이 불어요",
-    recommendation: "산책 어때요? Step! 🏃🏻",
+    max: 7,
+    message: "살랑 바람 불어요",
+    recommendation: "산책 어때요? 🏃🏻",
   },
   {
-    min: 6,
+    min: 7,
     max: 10,
     message: "꽤 바람이 불어요",
     recommendation: "얇은 겉옷 챙기세요! 🧥",

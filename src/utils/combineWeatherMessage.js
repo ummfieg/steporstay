@@ -39,7 +39,7 @@ export const getCombineMessage = ({
   if (weatherMainMessage) weatherMessage.push(weatherMainMessage);
   if (tempMessage) weatherMessage.push(tempMessage);
 
-  //폭염+한파
+  //폭염 or 한파
   if ((temp <= 5 || temp >= 30) && tempRec) {
     recommendationText.push(tempRec);
   }
@@ -50,10 +50,11 @@ export const getCombineMessage = ({
     if (visibilityMessage) weatherMessage.push(visibilityMessage);
   }
 
-  // 풍속
-  if (windMaxSpeed > 6) {
-    if (windMessage) weatherMessage.push(windMessage);
-    if (windRec) recommendationText.push(windRec);
+  if (temp < 30) {
+    if (windMaxSpeed > 7) {
+      if (windMessage) weatherMessage.push(windMessage);
+      if (windRec) recommendationText.push(windRec);
+    }
   }
 
   // 미세먼지
