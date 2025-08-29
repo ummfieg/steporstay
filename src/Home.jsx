@@ -325,7 +325,6 @@ const Home = () => {
       String(today.getDate()).padStart(2, "0");
 
     const { mondayStr, sundayStr } = getThisWeek();
-
     if (dateStr >= mondayStr && dateStr <= sundayStr) {
       setStepRecord((prev) => {
         const existsIndex = prev.findIndex((item) => item.date === dateStr);
@@ -355,6 +354,15 @@ const Home = () => {
       toast(`이번주 중에는 ${totalCount} step 했어요!`);
     }
   };
+
+  useEffect(() => {
+    const today = new Date();
+    const { sundayStr } = getThisWeek();
+    if (today > new Date(sundayStr)) {
+      localStorage.removeItem("userAction");
+      setStepRecord([]);
+    }
+  }, []);
 
   return (
     <Wrapper>
