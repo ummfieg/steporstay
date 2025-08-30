@@ -13,6 +13,8 @@ import {
   KeyIcon,
   CircleIcon,
   IconWrapper,
+  WeatherImageWrapper,
+  WindowSection,
 } from "./styles/Home.style";
 import WeatherDisplay from "./features/WeatherDisplay";
 import SearchModal from "./components/SearchModal";
@@ -44,15 +46,16 @@ const Home = () => {
   const { temp, pm2_5, weather, weatherId, visibility, wind, humidity } =
     weatherDataList[currentIndex] || {};
 
-  const { weatherMessage, recommendationText } = getCombineMessage({
-    temp,
-    pm2_5,
-    weather,
-    weatherId,
-    visibility,
-    wind,
-    humidity,
-  });
+  const { weatherMessage, recommendationText, weatherImage } =
+    getCombineMessage({
+      temp,
+      pm2_5,
+      weather,
+      weatherId,
+      visibility,
+      wind,
+      humidity,
+    });
 
   const getWeatherInfo = async (cityName, uiName) => {
     const getLatLon = async (cityName) => {
@@ -227,7 +230,6 @@ const Home = () => {
 
   // id 기준 수정하기
   const handleDeleteAndUpdate = (idToDelete, nameToDelete) => {
-    console.log("삭제할값", idToDelete, nameToDelete);
     const newLocationList = locationList.filter(
       (loc) =>
         !(
@@ -370,40 +372,51 @@ const Home = () => {
         <LogoText $clicked={clicked}>{logoMain}</LogoText>
         {logoSub && <LogoSub onClick={handleChangeMind}>{logoSub}</LogoSub>}
       </Logo>
-      <WindowImgWrapper>
-        <div
-          onClick={(e) => {
-            handleIconClick(e);
-            handleActionClick(e);
-          }}
-        >
-          <StepIcon data-type="step" disabled={clickedActionType === "stay"} />
-          <StayIcon data-type="stay" disabled={clickedActionType === "step"} />
-        </div>
-        <KeyIcon onClick={handleClickRecord} />
-        <IconWrapper>
-          <CircleIcon />
-          <CircleIcon />
-          <CircleIcon />
-        </IconWrapper>
+      <WindowSection>
+        <WeatherImageWrapper>
+          <img src={weatherImage} />
+        </WeatherImageWrapper>
+        <WindowImgWrapper>
+          <div
+            onClick={(e) => {
+              handleIconClick(e);
+              handleActionClick(e);
+            }}
+          >
+            <StepIcon
+              data-type="step"
+              disabled={clickedActionType === "stay"}
+            />
+            <StayIcon
+              data-type="stay"
+              disabled={clickedActionType === "step"}
+            />
+          </div>
+          <KeyIcon onClick={handleClickRecord} />
+          <IconWrapper>
+            <CircleIcon />
+            <CircleIcon />
+            <CircleIcon />
+          </IconWrapper>
 
-        <TextBubble>
-          <span>{recommendationText}</span>
-        </TextBubble>
-        <ToastContainer
-          position="bottom-center"
-          autoClose={2000}
-          limit={1}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick={false}
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="colored"
-        />
-      </WindowImgWrapper>
+          <TextBubble>
+            <span>{recommendationText}</span>
+          </TextBubble>
+          <ToastContainer
+            position="bottom-center"
+            autoClose={2000}
+            limit={1}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick={false}
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="colored"
+          />
+        </WindowImgWrapper>
+      </WindowSection>
       <WeatherDisplay
         onOpen={openModal}
         weatherDataList={weatherDataList}

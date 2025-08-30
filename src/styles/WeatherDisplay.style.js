@@ -2,15 +2,16 @@ import styled from "styled-components";
 
 export const DisplayWrapper = styled.div`
   position: absolute;
-  top: 180px;
+  top: 11.25rem;
   left: 50%;
   transform: translateX(-50%);
   text-align: center;
+  z-index: 3;
 `;
 
 export const Degree = styled.h2`
   margin: 0;
-  font-size: 40px;
+  font-size: 2.5rem;
 `;
 
 export const RegionWrapper = styled.div`
@@ -19,7 +20,7 @@ export const RegionWrapper = styled.div`
   border-radius: 40%;
   border: none;
   cursor: pointer;
-  padding: 3px;
+  padding: 0.188rem;
 `;
 
 export const ChangeLocationBtn = styled.div`
@@ -34,7 +35,7 @@ export const ChangeLocationBtn = styled.div`
   background-repeat: no-repeat;
   background-position: center;
   margin-left: 0.5em;
-  padding: 2px;
+  padding: 0.125rem;
   &:hover {
     transform: scale(1.1);
   }

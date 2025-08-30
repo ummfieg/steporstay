@@ -8,6 +8,8 @@ import {
   ModalInfoText,
   SelectedLocions,
   InfoText,
+  DeleteBtn,
+  LocationsWrapper,
 } from "../styles/SearchModal.style";
 import { locationMapping } from "../utils/locationMapping";
 const SearchModal = ({
@@ -24,7 +26,7 @@ const SearchModal = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // const trimmed = input.trim();
+
     let trimmed = input.trim();
 
     if (trimmed.length < 2 || !/^[가-힣]+$/.test(trimmed)) {
@@ -32,7 +34,7 @@ const SearchModal = ({
       return;
     }
     setErrorMessage(null);
-    // onSearchSubmit(trimmed);
+
     onSearchSubmit({
       cityName: locationMapping[trimmed]?.cityName || trimmed,
       uiName: locationMapping[trimmed]?.uiName || trimmed,
@@ -67,15 +69,15 @@ const SearchModal = ({
 
         <SelectedLocions>
           {locationList.map((value, id) => (
-            <div key={`${value.id}-${value.name}`}>
+            <LocationsWrapper key={`${value.id}-${value.name}`}>
               <span>{value.name}</span>
               {!(value.id === 1835848 && value.name === "서울") && (
-                <img
+                <DeleteBtn
                   src="assets/x-button.svg"
                   onClick={() => onDelete(value.id, value.name)}
                 />
               )}
-            </div>
+            </LocationsWrapper>
           ))}
         </SelectedLocions>
 

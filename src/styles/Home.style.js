@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const Wrapper = styled.div`
-  width: 600px;
+  width: 37.5rem;
   padding: 0.625rem;
   display: flex;
   background-image: url("assets/background-img.svg");
@@ -32,21 +32,46 @@ export const LogoSub = styled.span`
   opacity: 0.6;
   cursor: pointer;
 `;
+
+export const WindowSection = styled.div`
+  position: relative;
+  width: 31.25rem;
+  min-height: 35rem;
+`;
+
 export const WindowImgWrapper = styled.div`
-  min-height: 560px;
-  width: 500px;
+  min-height: 35rem;
+  width: 31.25rem;
   background-image: url("assets/window.svg");
   background-repeat: no-repeat;
   background-position: center;
-  position: relative;
+  position: absolute;
   background-size: contain;
+  display: flex;
+  z-index: 2;
+`;
+
+export const WeatherImageWrapper = styled.div`
+  min-height: 34.375rem;
+  width: 31.25rem;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  overflow: hidden;
+  position: absolute;
+  z-index: 1;
+
+  img {
+    min-height: 31.25rem;
+    width: 18.75rem;
+  }
 `;
 
 export const IconWrapper = styled.div`
   display: flex;
   gap: 2.5rem;
   position: absolute;
-  top: 540px;
+  top: 33.75rem;
   left: 37.5%;
   & > div:nth-child(1) {
     margin-right: 1.2rem;
@@ -63,11 +88,11 @@ export const StepIcon = styled.button`
   background-size: contain;
   border: none;
   background-color: transparent;
-  width: 40px;
-  height: 112px;
+  width: 2.5rem;
+  height: 7rem;
   cursor: pointer;
   position: absolute;
-  top: 530px;
+  top: 33.125rem;
   left: 50%;
   transition: transform 0.2s ease-in-out;
   &:hover {
@@ -85,11 +110,11 @@ export const StayIcon = styled.button`
   background-size: contain;
   border: none;
   background-color: transparent;
-  width: 40px;
-  height: 112px;
+  width: 2.5rem;
+  height: 7rem;
   cursor: pointer;
   position: absolute;
-  top: 530px;
+  top: 33.125rem;
   left: 35.2%;
   transition: transform 0.2s ease-in-out;
   &:hover {
@@ -104,11 +129,11 @@ export const KeyIcon = styled.div`
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
-  width: 65px;
-  height: 65px;
+  width: 4.1rem;
+  height: 4.1rem;
   cursor: pointer;
   position: absolute;
-  top: 540px;
+  top: 33.75rem;
   left: 65%;
   transition: transform 0.2s ease-in-out;
   &:hover {
@@ -130,13 +155,12 @@ export const TextBubble = styled.div`
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
-  width: 253px;
-  height: 154px;
+  width: 15.82rem;
+  height: 9.625rem;
   position: absolute;
-  top: 380px;
+  top: 23.75rem;
   left: 44%;
-  padding: 6% 5% 10% 7%; //부모넓이 기준으로 상대적으로 변함 반응형에 좋음
-
+  padding: 6% 5% 10% 7%;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -24,7 +24,8 @@ export const getCombineMessage = ({
     getTempMessage(temp);
   const { recommendation: weatherIdRec } =
     getWeatherIdRecommendations(weatherId);
-  const { message: weatherMainMessage } = getWeatherMainMessage(weather);
+  const { message: weatherMainMessage, weatherImage } =
+    getWeatherMainMessage(weather);
   const {
     message: windMessage,
     recommendation: windRec,
@@ -77,5 +78,5 @@ export const getCombineMessage = ({
     recommendationText.push(weatherIdRec);
   }
 
-  return { weatherMessage, recommendationText };
+  return { weatherMessage, recommendationText, weatherImage };
 };

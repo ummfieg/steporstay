@@ -15,8 +15,8 @@ export const Modal = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 338px;
-  height: 303px;
+  width: 21.125rem;
+  height: 19rem;
   background-image: url("assets/search-modal.svg");
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   z-index: 1000;
@@ -25,11 +25,11 @@ export const Modal = styled.div`
 
 export const CloseBtn = styled.img`
   position: absolute;
-  top: 5.6%;
+  top: 5.7%;
   left: 4.15%;
   transform: translate(30%);
-  width: 10px;
-  height: 10px;
+  width: 0.625rem;
+  height: 0.625rem;
   cursor: pointer;
   z-index: 1000;
 `;
@@ -68,7 +68,7 @@ export const SearchBar = styled.input`
 export const InfoText = styled.span`
   font-size: 0.65rem;
   color: ${(props) => (props.$isError ? "#FF605B" : "var(--secondary)")};
-  padding: 0px 4px;
+  padding: 0px 0.25rem;
   transition: all 0.3s ease-in-out;
 `;
 
@@ -83,7 +83,7 @@ export const ModalInfoText = styled.p`
 `;
 
 export const SelectedLocions = styled.div`
-  padding: 3px;
+  padding: 0.188rem;
   border: none;
   display: flex;
   flex-direction: column;
@@ -93,21 +93,22 @@ export const SelectedLocions = styled.div`
   top: 50%;
   left: 50%;
   transform: translateX(-50%);
+`;
 
-  div {
-    display: flex;
-    align-items: end;
-    justify-content: center;
-    gap: 0.625rem;
-  }
-  img {
-    cursor: pointer;
-    width: 1rem;
-    &:hover {
-      transform: scale(1.1);
-      background-color: var(--logo);
-      border: none;
-      border-radius: 50%;
-    }
+export const LocationsWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+`;
+
+export const DeleteBtn = styled.img`
+  cursor: pointer;
+  width: 1rem;
+  &:hover {
+    transform: scale(1.1);
+    background-color: var(--logo);
+    border: none;
+    border-radius: 50%;
   }
 `;
