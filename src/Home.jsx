@@ -24,38 +24,9 @@ const weatherKey = import.meta.env.VITE_WEATHER_API_KEY;
 const kakaoKey = import.meta.env.VITE_KAKAO_API_KEY;
 
 const Home = () => {
-  const [locationList, setLocationList] = useState([]);
+  // 날씨 api 및 관리
   const [weatherDataList, setWeatherDataList] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(() => {
-    const saved = localStorage.getItem("lastViewedIndex");
-    return saved !== null ? Number(saved) : 0;
-  });
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [logoMain, setLogoMain] = useState("Step Or Stay?");
-  const [logoSub, setLogoSub] = useState("");
-  const [clicked, setClicked] = useState(false);
-  const [stepRecord, setStepRecord] = useState(() => {
-    const saved = localStorage.getItem("userAction");
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  const [actionMessage, setActionMessage] = useState("");
-  const [clickedActionType, setClickedActionType] = useState(null);
-
-  const { temp, pm2_5, weather, weatherId, visibility, wind, humidity } =
-    weatherDataList[currentIndex] || {};
-
-  const { weatherMessage, recommendationText, weatherImage } =
-    getCombineMessage({
-      temp,
-      pm2_5,
-      weather,
-      weatherId,
-      visibility,
-      wind,
-      humidity,
-    });
+  const [locationList, setLocationList] = useState([]);
 
   const getWeatherInfo = async (cityName, uiName) => {
     const getLatLon = async (cityName) => {
@@ -121,46 +92,6 @@ const Home = () => {
     return resWeatehrData;
   };
 
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
-
-  useEffect(() => {
-    const stored = localStorage.getItem("weatherData");
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored);
-        setWeatherDataList(parsed);
-
-        setLocationList(
-          parsed.map((d) => ({ id: d.id, name: d.location || d.uiName }))
-        );
-      } catch (e) {
-        console.error("localStorage 파싱 에러", e);
-      }
-    } else {
-      handleSearchSubmit({ cityName: "서울", uiName: "서울" });
-    }
-  }, []);
-
-  useEffect(() => {
-    if (weatherDataList.length === 0) return;
-
-    try {
-      localStorage.setItem("weatherData", JSON.stringify(weatherDataList));
-    } catch (e) {
-      console.error("localStorage 저장 에러", e);
-    }
-  }, [weatherDataList]);
-
-  useEffect(() => {
-    if (errorMessage) {
-      const timer = setTimeout(() => {
-        setErrorMessage(null);
-      }, 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [errorMessage]);
-
   useEffect(() => {
     if (weatherDataList.length === 0) return;
     const intervalId = setInterval(() => {
@@ -175,60 +106,6 @@ const Home = () => {
     return () => clearInterval(intervalId);
   }, [weatherDataList]);
 
-  const handleSearchSubmit = async ({ cityName, uiName }) => {
-    const nowTime = Date.now();
-
-    const existing = weatherDataList.find(
-      (data) => data.cityName === cityName && data.uiName === uiName
-    );
-
-    if (existing && nowTime - existing.updatedTime < 15 * 60 * 1000) {
-      return;
-    }
-
-    if (!existing && locationList.length >= 3) {
-      return;
-    }
-
-    try {
-      const resWeatherData = await getWeatherInfo(cityName, uiName);
-
-      if (existing) {
-        setWeatherDataList((prev) =>
-          prev.map((data) =>
-            data.cityName === cityName && data.uiName === uiName
-              ? { ...resWeatherData, updatedTime: nowTime }
-              : data
-          )
-        );
-      } else {
-        setWeatherDataList((prev) => [
-          ...prev,
-          { ...resWeatherData, updatedTime: nowTime },
-        ]);
-        setLocationList((prev) => [
-          ...prev,
-          { id: resWeatherData.id, name: uiName },
-        ]);
-      }
-
-      setErrorMessage(null);
-    } catch (err) {
-      console.error("검색 실패:", err);
-      setErrorMessage("api");
-    }
-  };
-
-  const handleChangeIndex = () => {
-    if (weatherDataList.length === 0) return;
-    setCurrentIndex((prev) => (prev + 1) % weatherDataList.length);
-  };
-
-  useEffect(() => {
-    localStorage.setItem("lastViewedIndex", String(currentIndex));
-  }, [currentIndex]);
-
-  // id 기준 수정하기
   const handleDeleteAndUpdate = (idToDelete, nameToDelete) => {
     const newLocationList = locationList.filter(
       (loc) =>
@@ -259,6 +136,40 @@ const Home = () => {
     }
   };
 
+  // 모달
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
+  // 지역별 인덱스
+  const [currentIndex, setCurrentIndex] = useState(() => {
+    const saved = localStorage.getItem("lastViewedIndex");
+    return saved !== null ? Number(saved) : 0;
+  });
+
+  const handleChangeIndex = () => {
+    if (weatherDataList.length === 0) return;
+    setCurrentIndex((prev) => (prev + 1) % weatherDataList.length);
+  };
+
+  useEffect(() => {
+    localStorage.setItem("lastViewedIndex", String(currentIndex));
+  }, [currentIndex]);
+
+  //로고
+  const [logoMain, setLogoMain] = useState("Step Or Stay?");
+  const [logoSub, setLogoSub] = useState("");
+
+  //기록
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [clicked, setClicked] = useState(false);
+  const [stepRecord, setStepRecord] = useState(() => {
+    const saved = localStorage.getItem("userAction");
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [actionMessage, setActionMessage] = useState("");
+  const [clickedActionType, setClickedActionType] = useState(null);
+
   const handleIconClick = (e) => {
     const type = e.target.dataset.type;
     if (type === "step") {
@@ -288,6 +199,15 @@ const Home = () => {
     else if (action === "stay")
       updateStepRecord(0, "오늘의 날씨는 Stay! 이불밖은 위험해 💨");
   };
+
+  useEffect(() => {
+    if (errorMessage) {
+      const timer = setTimeout(() => {
+        setErrorMessage(null);
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [errorMessage]);
 
   const getThisWeek = () => {
     const today = new Date();
@@ -338,14 +258,17 @@ const Home = () => {
           return newRecords;
         } else {
           newRecords = [...prev, { date: dateStr, count }];
+          return newRecords;
         }
-        localStorage.setItem("userAction", JSON.stringify(newRecords));
-        return newRecords;
       });
       setActionMessage(message);
       if (message) toast(message);
     }
   };
+
+  useEffect(() => {
+    localStorage.setItem("userAction", JSON.stringify(stepRecord));
+  }, [stepRecord]);
 
   const handleClickRecord = () => {
     const totalCount = stepRecord.reduce((sum, { count }) => sum + count, 0);
@@ -353,7 +276,7 @@ const Home = () => {
       toast(`아직 이번주는 0 STEP! `);
     }
     if (totalCount >= 1) {
-      toast(`이번주 중에는 ${totalCount} step 했어요!`);
+      toast(`이번주에는 ${totalCount} step 했어요!`);
     }
   };
 
@@ -365,6 +288,94 @@ const Home = () => {
       setStepRecord([]);
     }
   }, []);
+
+  const { temp, pm2_5, weather, weatherId, visibility, wind, humidity } =
+    weatherDataList[currentIndex] || {};
+
+  const { weatherMessage, recommendationText, weatherImage } =
+    getCombineMessage({
+      temp,
+      pm2_5,
+      weather,
+      weatherId,
+      visibility,
+      wind,
+      humidity,
+    });
+
+  // 스토리지 로직
+  useEffect(() => {
+    const stored = localStorage.getItem("weatherData");
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        setWeatherDataList(parsed);
+
+        setLocationList(
+          parsed.map((d) => ({ id: d.id, name: d.location || d.uiName }))
+        );
+      } catch (e) {
+        console.error("localStorage 파싱 에러", e);
+      }
+    } else {
+      handleSearchSubmit({ cityName: "서울", uiName: "서울" });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (weatherDataList.length === 0) return;
+
+    try {
+      localStorage.setItem("weatherData", JSON.stringify(weatherDataList));
+    } catch (e) {
+      console.error("localStorage 저장 에러", e);
+    }
+  }, [weatherDataList]);
+
+  // 지역 검색
+  const handleSearchSubmit = async ({ cityName, uiName }) => {
+    const nowTime = Date.now();
+
+    const existing = weatherDataList.find(
+      (data) => data.cityName === cityName && data.uiName === uiName
+    );
+
+    if (existing && nowTime - existing.updatedTime < 15 * 60 * 1000) {
+      return;
+    }
+
+    if (!existing && locationList.length >= 3) {
+      return;
+    }
+
+    try {
+      const resWeatherData = await getWeatherInfo(cityName, uiName);
+
+      if (existing) {
+        setWeatherDataList((prev) =>
+          prev.map((data) =>
+            data.cityName === cityName && data.uiName === uiName
+              ? { ...resWeatherData, updatedTime: nowTime }
+              : data
+          )
+        );
+      } else {
+        setWeatherDataList((prev) => [
+          ...prev,
+          { ...resWeatherData, updatedTime: nowTime },
+        ]);
+        setLocationList((prev) => [
+          ...prev,
+          { id: resWeatherData.id, name: uiName },
+        ]);
+      }
+
+      setErrorMessage(null);
+    } catch (err) {
+      console.error("검색 실패:", err);
+      setErrorMessage("api");
+    }
+  };
 
   return (
     <Wrapper>
