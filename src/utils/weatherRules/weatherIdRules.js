@@ -89,15 +89,15 @@ const weatherIdRules = [
   },
   {
     ids: [800],
-    recommendation: "기분 맑음! ☀️😊",
+    recommendation: "오늘 맑음! 미뤄둔 일을 해볼까요☀️😊",
   },
   {
     ids: [801, 802],
-    recommendation: "살짝 구름이 껴있지만 맑은 편이에요. 산책 어때요? ☁️🚶‍♀️",
+    recommendation: "살짝 구름이 껴있어요 하늘을 봐요 ☁️🚶‍♀️",
   },
   {
     ids: [803, 804],
-    recommendation: "구름이 많아 흐린 느낌이에요 🌥️ ",
+    recommendation: "구름이 많아 흐린 느낌이에요 🌥️ 조명 ON!",
   },
 ];
 
