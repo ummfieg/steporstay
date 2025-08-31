@@ -32,7 +32,7 @@ export const getCombineMessage = ({
     max: windMaxSpeed,
   } = getWindSpeedMessageRec(wind);
   const { recommendation: humidityRec } = getHumidityRec(humidity);
-  const weatherMainList = weather.map((w) => w.main).join(",");
+  const weatherMainList = weather.join(",");
   const weatherMessage = [];
   const recommendationText = [];
 
@@ -41,7 +41,11 @@ export const getCombineMessage = ({
   if (tempMessage) weatherMessage.push(tempMessage);
 
   //폭염 or 한파
-  if ((temp <= 5 || temp >= 30) && tempRec) {
+  if (
+    (temp <= 5 || temp >= 30) &&
+    tempRec &&
+    !weatherMainList.includes("Rain")
+  ) {
     recommendationText.push(tempRec);
   }
 
@@ -72,8 +76,7 @@ export const getCombineMessage = ({
     weatherIdRec &&
     !recommendationText.includes(weatherIdRec) &&
     !recommendationText.includes(windRec) &&
-    !recommendationText.includes(dustRec) &&
-    !recommendationText.includes(tempRec)
+    !recommendationText.includes(dustRec)
   ) {
     recommendationText.push(weatherIdRec);
   }
