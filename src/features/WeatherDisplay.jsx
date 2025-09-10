@@ -9,13 +9,7 @@ import {
 const now = new Date();
 const month = now.getMonth() + 1;
 const day = now.getDate();
-const formattedDate = `${month}월 ${day}일`;
-const mockDate = {
-  date: formattedDate,
-  region: "서울",
-  dgree: 32,
-  content: "현재 기운은 높고, 자외선이 강해요",
-};
+const today = `${month}월 ${day}일`;
 
 const WeatherDisplay = ({
   onOpen,
@@ -27,11 +21,10 @@ const WeatherDisplay = ({
   const { location, temp, weather, uiName } =
     weatherDataList[currentIndex] || {};
   const roundedTemp = Math.round(temp);
-
   return (
     <>
       <DisplayWrapper>
-        <span>{mockDate.date}</span>
+        <span>{today}</span>
         <span> | </span>
         <RegionWrapper onClick={onOpen} title="지역 검색">
           <span>{location || uiName}</span>
