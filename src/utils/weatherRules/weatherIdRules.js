@@ -1,7 +1,7 @@
 const weatherIdRules = [
   {
     ids: [200, 201, 202],
-    recommendation: "낙뢰주의! 큰 나무나, 전봇대 근처는 피하세요! 🌩️",
+    recommendation: "낙뢰주의! 큰 나무나 전봇대 근처는 피하세요! 🌩️",
   },
   { ids: [210, 211], recommendation: "천둥쳐요! 놀랄 수 있어요! 😮" },
   { ids: [212], recommendation: "강한 낙뢰에요⚠️ 실내로 대피하세요! 🌩️" },
@@ -25,12 +25,11 @@ const weatherIdRules = [
   },
   {
     ids: [502],
-    recommendation: "비가 꽤 많이와요 우산과 손수건을 챙겨요! 🌂🤧",
+    recommendation: "비가 꽤 많이와요. 우산과 손수건을 챙겨요! 🌂🤧",
   },
   {
     ids: [503, 504],
-    recommendation:
-      "🌊 폭우에요! Stay!  위험하니 창문을 꼭 닫고 외출을 자제해요 🪟 ",
+    recommendation: "폭우예요 Stay! 위험하니 창문을 닫고 외출을 자제해요 🪟 ",
   },
   {
     ids: [511],
@@ -38,13 +37,13 @@ const weatherIdRules = [
   },
   {
     ids: [520, 521, 522, 523, 524, 525, 526, 527, 528, 529, 530, 531],
-    recommendation: "강한 소나기에요 잠시 실내에서 비를 피해요☔️❗️",
+    recommendation: "강한 소나기로 잠시 실내에서 비를 피해요☔️❗️",
   },
   { ids: [600], recommendation: "밖에 눈이 내립니다아 🌨️" },
   { ids: [601], recommendation: "펑펑 눈이옵니다🌨️ 우산을 챙겨도 좋아요!👍" },
   {
     ids: [602],
-    recommendation: "⚠️ 폭설이이에요 길이 미끄러우니 조심 또 조심하세요 🚶🏻 🚘",
+    recommendation: "⚠️폭설이에요 길이 미끄러우니 조심 또 조심하세요 🚶🏻 🚘",
   },
   {
     ids: [611, 612],
@@ -85,7 +84,7 @@ const weatherIdRules = [
   {
     ids: [781],
     recommendation:
-      "토네이도 경고! 즉시 실내 깊숙한 곳으로 대피하세요!! 🌪️❗️❗️",
+      "토네이도 경고! 즉시 실내 안전한 곳으로 대피하세요!! 🌪️❗️❗️",
   },
   {
     ids: [800],
