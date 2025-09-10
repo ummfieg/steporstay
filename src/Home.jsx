@@ -98,7 +98,7 @@ const Home = () => {
       const nowTime = Date.now();
 
       weatherDataList.forEach((data) => {
-        if (nowTime - data.updatedTime > 15 * 60 * 1000) {
+        if (nowTime - data.updatedTime > 10 * 60 * 1000) {
           handleSearchSubmit({ cityName: data.cityName, uiName: data.uiName });
         }
       });
@@ -340,7 +340,7 @@ const Home = () => {
       (data) => data.cityName === cityName && data.uiName === uiName
     );
 
-    if (existing && nowTime - existing.updatedTime < 15 * 60 * 1000) {
+    if (existing && nowTime - existing.updatedTime < 10 * 60 * 1000) {
       return;
     }
 
