@@ -285,7 +285,7 @@ const Home = () => {
     today.setHours(0, 0, 0, 0);
     const { mondayStr } = getThisWeek();
     const mondayDate = new Date(mondayStr);
-    monday.setHours(0, 0, 0, 0);
+    mondayDate.setHours(0, 0, 0, 0);
 
     setStepRecord((prev) =>
       prev.filter((item) => {
