@@ -282,11 +282,18 @@ const Home = () => {
 
   useEffect(() => {
     const today = new Date();
-    const { sundayStr } = getThisWeek();
-    if (today > new Date(sundayStr)) {
-      localStorage.removeItem("userAction");
-      setStepRecord([]);
-    }
+    today.setHours(0, 0, 0, 0);
+    const { mondayStr } = getThisWeek();
+    const mondayDate = new Date(mondayStr);
+    monday.setHours(0, 0, 0, 0);
+
+    setStepRecord((prev) =>
+      prev.filter((item) => {
+        const itemDate = new Date(item.date);
+        itemDate.setHours(0, 0, 0, 0);
+        return itemDate >= monday;
+      })
+    );
   }, []);
 
   const { temp, pm2_5, weather, weatherId, visibility, wind, humidity } =
