@@ -30,7 +30,7 @@ FE | 문서화 및 버전 관리 |
 | <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black"> <img src="https://img.shields.io/badge/styledcomponents-DB7093?style=for-the-badge&logo=styledcomponents&logoColor=black">| <img src="https://img.shields.io/badge/notion-000000?style=for-the-badge&logo=notion&logoColor=white"> <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">|  
 
   
-### 📄 [설계문서](/23f4feb968238099a9f7e62a5ccd1629?source=copy_link) 바로가기 (컴포넌트 구조 및 상세 로직)
+### 📄 [설계문서](https://step-or-stay.notion.site/23f4feb968238099a9f7e62a5ccd1629) 바로가기 (컴포넌트 구조 및 상세 로직)
 
 
   
