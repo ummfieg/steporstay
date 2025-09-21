@@ -291,7 +291,7 @@ const Home = () => {
       prev.filter((item) => {
         const itemDate = new Date(item.date);
         itemDate.setHours(0, 0, 0, 0);
-        return itemDate >= monday;
+        return itemDate >= mondayDate;
       })
     );
   }, []);
