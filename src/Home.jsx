@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
@@ -19,25 +19,55 @@ import {
 import WeatherDisplay from "./features/WeatherDisplay";
 import SearchModal from "./components/SearchModal";
 import { getCombineMessage } from "./utils/combineWeatherMessage";
-import { locationMapping } from "./utils/locationMapping";
 const weatherKey = import.meta.env.VITE_WEATHER_API_KEY;
 const kakaoKey = import.meta.env.VITE_KAKAO_API_KEY;
+const WEATHER_CACHE_TIME = 10 * 60 * 1000;
+
+const getDateKey = (time = Date.now()) => {
+  const date = new Date(time);
+  return (
+    date.getFullYear() +
+    "-" +
+    String(date.getMonth() + 1).padStart(2, "0") +
+    "-" +
+    String(date.getDate()).padStart(2, "0")
+  );
+};
+
+const shouldRefreshWeather = (data, nowTime = Date.now()) => {
+  if (!data?.updatedTime) return true;
+  if (data.updatedDate !== getDateKey(nowTime)) return true;
+  return nowTime - data.updatedTime > WEATHER_CACHE_TIME;
+};
+
+const isValidWeatherData = (data) =>
+  data?.cityName &&
+  data?.uiName &&
+  typeof data.temp === "number" &&
+  Array.isArray(data.weather);
 
 const Home = () => {
   // 날씨 api 및 관리
   const [weatherDataList, setWeatherDataList] = useState([]);
   const [locationList, setLocationList] = useState([]);
+  const [isWeatherLoading, setIsWeatherLoading] = useState(false);
 
   const getWeatherInfo = async (cityName, uiName) => {
     const getLatLon = async (cityName) => {
       const response = await fetch(
-        `https://dapi.kakao.com/v2/local/search/address.json?query=${cityName}`,
+        `https://dapi.kakao.com/v2/local/search/address.json?query=${encodeURIComponent(
+          cityName
+        )}`,
         {
           headers: {
             Authorization: `KakaoAK ${kakaoKey}`,
           },
         }
       );
+
+      if (!response.ok) {
+        throw new Error("주소 검색 요청에 실패했습니다.");
+      }
 
       const data = await response.json();
 
@@ -59,6 +89,10 @@ const Home = () => {
         fetch(weatherURL),
         fetch(airURL),
       ]);
+
+      if (!weatherRes.ok || !airRes.ok) {
+        throw new Error("날씨 요청에 실패했습니다.");
+      }
 
       const weatherData = await weatherRes.json();
       const airData = await airRes.json();
@@ -83,6 +117,7 @@ const Home = () => {
         pm2_5: airData.list[0].components.pm2_5,
         aqi: airData.list[0].main.aqi,
         updatedTime: Date.now(),
+        updatedDate: getDateKey(),
       };
     };
 
@@ -98,11 +133,18 @@ const Home = () => {
       const nowTime = Date.now();
 
       weatherDataList.forEach((data) => {
-        if (nowTime - data.updatedTime > 10 * 60 * 1000) {
+        if (shouldRefreshWeather(data, nowTime)) {
           handleSearchSubmit({ cityName: data.cityName, uiName: data.uiName });
         }
       });
     }, 60 * 1000);
+
+    weatherDataList.forEach((data) => {
+      if (shouldRefreshWeather(data)) {
+        handleSearchSubmit({ cityName: data.cityName, uiName: data.uiName });
+      }
+    });
+
     return () => clearInterval(intervalId);
   }, [weatherDataList]);
 
@@ -167,7 +209,6 @@ const Home = () => {
     const saved = localStorage.getItem("userAction");
     return saved ? JSON.parse(saved) : [];
   });
-  const [actionMessage, setActionMessage] = useState("");
   const [clickedActionType, setClickedActionType] = useState(null);
 
   const handleIconClick = (e) => {
@@ -261,7 +302,6 @@ const Home = () => {
           return newRecords;
         }
       });
-      setActionMessage(message);
       if (message) toast(message);
     }
   };
@@ -312,20 +352,43 @@ const Home = () => {
 
   // 스토리지 로직
   useEffect(() => {
+    const loadDefaultLocation = () => {
+      setCurrentIndex(0);
+      handleSearchSubmit({ cityName: "서울", uiName: "서울" });
+    };
+
     const stored = localStorage.getItem("weatherData");
     if (stored) {
       try {
         const parsed = JSON.parse(stored);
-        setWeatherDataList(parsed);
+        const validData = Array.isArray(parsed)
+          ? parsed.filter(isValidWeatherData)
+          : [];
+        const hasDefaultLocation = validData.some(
+          (data) => data.cityName === "서울" && data.uiName === "서울"
+        );
 
+        if (validData.length === 0 || !hasDefaultLocation) {
+          loadDefaultLocation();
+          return;
+        }
+
+        const savedIndex = Number(localStorage.getItem("lastViewedIndex"));
+        setCurrentIndex(
+          Number.isInteger(savedIndex) && savedIndex < validData.length
+            ? savedIndex
+            : 0
+        );
+        setWeatherDataList(validData);
         setLocationList(
-          parsed.map((d) => ({ id: d.id, name: d.location || d.uiName }))
+          validData.map((d) => ({ id: d.id, name: d.location || d.uiName }))
         );
       } catch (e) {
         console.error("localStorage 파싱 에러", e);
+        loadDefaultLocation();
       }
     } else {
-      handleSearchSubmit({ cityName: "서울", uiName: "서울" });
+      loadDefaultLocation();
     }
   }, []);
 
@@ -347,29 +410,40 @@ const Home = () => {
       (data) => data.cityName === cityName && data.uiName === uiName
     );
 
-    if (existing && nowTime - existing.updatedTime < 10 * 60 * 1000) {
+    if (existing && !shouldRefreshWeather(existing, nowTime)) {
       return;
     }
 
-    if (!existing && locationList.length >= 3) {
-      return;
-    }
+    setIsWeatherLoading(true);
 
     try {
       const resWeatherData = await getWeatherInfo(cityName, uiName);
+
+      if (!existing && locationList.length >= 3) {
+        setErrorMessage("limit");
+        return;
+      }
 
       if (existing) {
         setWeatherDataList((prev) =>
           prev.map((data) =>
             data.cityName === cityName && data.uiName === uiName
-              ? { ...resWeatherData, updatedTime: nowTime }
+              ? {
+                  ...resWeatherData,
+                  updatedTime: nowTime,
+                  updatedDate: getDateKey(nowTime),
+                }
               : data
           )
         );
       } else {
         setWeatherDataList((prev) => [
           ...prev,
-          { ...resWeatherData, updatedTime: nowTime },
+          {
+            ...resWeatherData,
+            updatedTime: nowTime,
+            updatedDate: getDateKey(nowTime),
+          },
         ]);
         setLocationList((prev) => [
           ...prev,
@@ -381,6 +455,8 @@ const Home = () => {
     } catch (err) {
       console.error("검색 실패:", err);
       setErrorMessage("api");
+    } finally {
+      setIsWeatherLoading(false);
     }
   };
 
@@ -388,7 +464,13 @@ const Home = () => {
     <Wrapper>
       <Logo>
         <LogoText $clicked={clicked}>{logoMain}</LogoText>
-        {logoSub && <LogoSub onClick={handleChangeMind}>{logoSub}</LogoSub>}
+        {logoSub && (
+          <LogoSub onClick={handleChangeMind}>
+            {logoSub.split("").map((letter, index) => (
+              <span key={`${letter}-${index}`}>{letter}</span>
+            ))}
+          </LogoSub>
+        )}
       </Logo>
       <WindowSection>
         <WeatherImageWrapper>
@@ -418,7 +500,9 @@ const Home = () => {
           </IconWrapper>
 
           <TextBubble>
-            <span>{recommendationText}</span>
+            {recommendationText.map((text, index) => (
+              <p key={`${text}-${index}`}>{text}</p>
+            ))}
           </TextBubble>
           <ToastContainer
             position="bottom-center"
@@ -441,6 +525,8 @@ const Home = () => {
         weatherMessage={weatherMessage}
         onChangeIndex={handleChangeIndex}
         currentIndex={currentIndex}
+        isLoading={isWeatherLoading}
+        errorMessage={errorMessage}
       />
       {isModalOpen && (
         <SearchModal
