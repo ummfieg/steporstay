@@ -2,7 +2,7 @@ const humidityRules = [
   {
     min: 70,
     max: 80,
-    recommendation: "음❓습해요 환기추천해요 ",
+    recommendation: "💧습해요 제습을 추천해요!",
   },
   {
     min: 80,

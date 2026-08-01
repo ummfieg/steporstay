@@ -96,7 +96,7 @@ const weatherIdRules = [
   },
   {
     ids: [803, 804],
-    recommendation: "구름이 많아 흐린 느낌이에요 🌥️ 조명 ON!",
+    recommendation: "흐린 하루예요 🌥️ 조명 ON!",
   },
 ];
 
