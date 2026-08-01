@@ -1,37 +1,107 @@
-# Step Or Stay❓
-###  나갈까? 말까? 오늘의 날씨를 보고 결정해❗️
-🗣️ 지금 날씨에 따라 뭘 챙길지, 나갈지 정해볼까?
+# Step Or Stay
 
----
+> 나갈까❓ 말까❓ 오늘의 날씨를 보고 결정해❗️
 
-### 🤔 기획의도
-기존 날씨 앱은 날씨에 대한 정보는 주지만 정보에 대한 다음 행동을 추천하거나,  
-안내해주지 않는다는 점을 고려해 __Rule-based__ 기반으로 행동을 추천하는 날씨 앱을 만들었습니다.
+Step Or Stay는 지금 날씨에 따라 외출 여부와 우산, 마스크, 옷차림 같은 상황별 행동을 제안하고, 사용자의 일주일 Step 기록을 남기는 React 기반 웹앱입니다.
 
-### 🌤️ 주요기능
-- 사용자가 입력한 지역기반 오늘 날씨 제공
-- 날씨에 따른 행동 추천
-- Step 또는 Stay 버튼을 눌러 그날의 외출 기록 저장
-- 이번 주 Step(외출) 횟수 토스트 메세지 제공
+## 기획 의도
 
-### 🖼 서비스 화면
-- 창문 밖을 바라보는 컨셉으로 디자인했어요
-- 날씨에 따라 날씨 안내 및 추천 행동 문구가 바뀌어요!
-- 지역명을 클릭하면 다른 지역을 검색 할 수 있어요!
-- 📎 [StepOrStay](https://steporstay.netlify.app/) 바로가기
+기존 날씨 앱은 기온, 강수, 미세먼지 같은 정보를 제공하지만 사용자가 그 정보를 보고 어떤 행동을 하면 좋을지까지 연결해주지는 않는다고 느꼈습니다.
 
-<img width="308" height="505" alt="image" src="https://github.com/user-attachments/assets/a263ec36-1c38-46b7-9ff8-a5b7dd815a89" />
-<img width="208" height="243" alt="image" src="https://github.com/user-attachments/assets/f40a63fa-28c9-4162-974a-56ffde786ee1" />
+Step Or Stay는 날씨 정보를 행동 판단으로 이어지게 하기 위해 만들었습니다.</br>
+사용자는 오늘 날씨를 확인한 뒤 나갈지 머무를지 선택할 수 있고, 앱은 날씨 조건에 따라 외출 자제, 우산 준비, 마스크 착용, 옷차림 등 상황별 행동을 제안합니다.
 
----
-### 🛠️ 기술 스택
-FE | 문서화 및 버전 관리 |
-:---:|:---:|
-| <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black"> <img src="https://img.shields.io/badge/styledcomponents-DB7093?style=for-the-badge&logo=styledcomponents&logoColor=black">| <img src="https://img.shields.io/badge/notion-000000?style=for-the-badge&logo=notion&logoColor=white"> <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">|  
+## 주요 기능
 
-  
-### 📄 [설계문서](https://step-or-stay.notion.site/23f4feb968238099a9f7e62a5ccd1629) 바로가기 (컴포넌트 구조 및 상세 로직)
+- 사용자가 입력한 지역의 현재 날씨 조회
+- 날씨, 기온, 습도, 풍속, 미세먼지, 가시거리 기반 행동 추천
+- Step 또는 Stay 선택을 통한 오늘의 외출 기록 저장
+- 일주일 동안의 Step 횟수 확인
+- 최근 조회 지역과 날씨 데이터 저장
+- 최대 3개 지역 관리
 
+## 서비스 화면
 
-  
-  
+창문 밖 날씨를 확인하고 Step/Stay를 선택하는 컨셉으로 UI를 구성했습니다.
+
+- 날씨 상태에 따라 이미지와 안내 문구가 변경됩니다.
+- 지역명을 클릭하면 다른 지역을 검색할 수 있습니다.
+- Step/Stay 선택 후 이번 주 외출 기록을 확인할 수 있습니다.
+
+[Step Or Stay 바로가기](https://steporstay.netlify.app/)
+
+<img width="450" alt="Step Or Stay main" src="https://github.com/user-attachments/assets/d2512f92-1799-43de-b5b2-c074c7d4ef89" />
+
+<img width="208" alt="Step Or Stay modal" src="https://github.com/user-attachments/assets/f40a63fa-28c9-4162-974a-56ffde786ee1" />
+
+## 기술 스택
+
+| Frontend | Styling | Deployment | Documentation |
+| :---: | :---: | :---: | :---: |
+| React, Vite | styled-components | Netlify | Notion, GitHub |
+
+## 핵심 구현 포인트
+
+### 외부 API 연동
+
+- Kakao 주소 검색 API를 사용해 사용자가 입력한 지역명을 위도/경도로 변환했습니다.
+- OpenWeather API를 사용해 현재 날씨와 대기질 데이터를 조회했습니다.
+- 두 API의 응답을 조합해 UI에 필요한 날씨 정보와 추천 조건 데이터로 가공했습니다.
+
+### Rule-based 행동 추천
+
+- 날씨 상태, 기온, 미세먼지, 습도, 풍속, 가시거리 조건을 조합해 추천 문구를 생성했습니다.
+- 비, 폭염, 한파, 미세먼지, 강풍 등 상황에 따라 외출 여부와 준비 행동을 다르게 제안했습니다.
+- 추천 로직을 `utils` 함수로 분리해 UI 코드와 판단 로직을 구분했습니다.
+
+### 사용자 기록 저장
+
+- Step/Stay 선택 기록을 `localStorage`에 저장했습니다.
+- 월요일부터 일요일까지의 주간 범위를 계산해 이번 주 Step 횟수를 보여주도록 구현했습니다.
+- 이전 주 기록은 필터링해 현재 주간 기록만 유지되도록 처리했습니다.
+
+### 지역 및 날씨 데이터 관리
+
+- 사용자가 매번 지역을 다시 검색하지 않아도 되도록 최근 조회 지역을 저장했습니다.
+- API 호출을 매번 반복하지 않도록 날씨 데이터를 `localStorage`에 캐시했습니다.
+- 저장된 날씨 데이터는 10분이 지나면 다시 조회해 최신 상태를 반영하도록 설계했습니다.
+
+## API 연동 흐름
+
+1. 사용자가 지역명을 입력합니다.
+2. Kakao 주소 검색 API로 위도와 경도를 조회합니다.
+3. 조회한 좌표로 OpenWeather 날씨 API와 대기질 API를 호출합니다.
+4. 응답 데이터를 화면 상태에 맞게 가공합니다.
+5. 가공된 날씨 데이터를 추천 로직에 전달합니다.
+6. 날씨 안내 문구와 상황별 행동 추천을 화면에 표시합니다.
+
+## 컴포넌트 구조
+
+- `Home`: 날씨 데이터, 지역 목록, 사용자 선택 기록 등 주요 상태 관리
+- `WeatherDisplay`: 날짜, 지역, 기온, 날씨 메시지 표시
+- `SearchModal`: 지역 검색, 입력 검증, 지역 삭제 처리
+- `combineWeatherMessage`: 날씨 데이터 조합 및 추천 문구 생성
+- `weatherAllRules`: 날씨 조건별 메시지와 추천 규칙 관리
+
+## 구현 과정에서 고민한 점
+
+### 날씨 응답 데이터 조합
+
+주소 검색 API와 날씨 API의 응답 구조가 달라, 지역명 입력부터 좌표 조회, 날씨 조회까지 순차적으로 연결해야 했습니다. 이 과정에서 UI에 필요한 데이터만 추려 상태로 저장하도록 구성했습니다.
+
+### 추천 조건 조합
+
+단일 날씨 상태만으로는 사용자가 체감하는 상황을 충분히 반영하기 어렵다고 판단했습니다. 그래서 날씨 상태뿐 아니라 기온, 습도, 풍속, 미세먼지, 가시거리 조건을 함께 고려해 추천 문구를 생성했습니다.
+
+### 주간 Step 기록 관리
+
+Step 기록이 계속 누적되면 현재 주간 활동을 확인하기 어렵기 때문에, 월요일부터 일요일까지의 날짜 범위를 계산해 이번 주 기록만 유지하도록 처리했습니다.
+
+## 개선 예정
+
+- 고정 너비 레이아웃을 반응형 구조로 개선
+- TypeScript 전환을 통해 API 응답과 추천 로직의 타입 안정성 강화
+
+## 상세 설계 문서
+
+[설계 문서 바로가기](https://step-or-stay.notion.site/23f4feb968238099a9f7e62a5ccd1629)
