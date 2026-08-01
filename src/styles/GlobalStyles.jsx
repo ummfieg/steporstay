@@ -21,12 +21,17 @@ const GlobalStyle = createGlobalStyle`
     --logo:#ECECEC;
 } 
 
+html {
+    background-color: #f1ead8;
+}
+
 body {
     margin: 0 auto;
-    width: 600px;
+    width: 100%;
+    max-width: 600px;
     min-height: 100vh;
     font-family:'SUIT-Regular';
-    background-color: #f9f9f9;
+    background-color: #f1ead8;
 }
 
 h1, h2, h3, button, input {

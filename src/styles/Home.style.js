@@ -1,14 +1,20 @@
 import styled from "styled-components";
 
 export const Wrapper = styled.div`
-  width: 37.5rem;
+  width: min(100%, 37.5rem);
   padding: 0.625rem;
   display: flex;
-  background-image: url("assets/background-img.svg");
+  background-color: #f1ead8;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.45) 0.5px, transparent 0.5px),
+    radial-gradient(rgba(0, 0, 0, 0.08) 0.6px, transparent 0.6px);
+  background-position: 0 0, 1px 1px;
+  background-size: 3px 3px, 5px 5px;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
+  min-height: 100svh;
   position: relative;
   align-items: center;
+  overflow: hidden;
 `;
 
 export const Logo = styled.div`
@@ -31,6 +37,17 @@ export const LogoSub = styled.span`
   font-size: 0.8rem;
   opacity: 0.6;
   cursor: pointer;
+  display: inline-flex;
+  gap: 0.02rem;
+
+  span {
+    display: inline-block;
+    transition: transform 0.25s ease-in-out;
+  }
+
+  &:hover span {
+    transform: scaleX(-1);
+  }
 `;
 
 export const WindowSection = styled.div`
@@ -155,13 +172,24 @@ export const TextBubble = styled.div`
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
-  width: 15.82rem;
-  height: 9.625rem;
+  width: 17.25rem;
+  height: 10.8rem;
   position: absolute;
-  top: 23.75rem;
-  left: 44%;
-  padding: 6% 5% 10% 7%;
+  top: 23rem;
+  left: 41.5%;
+  padding: 2.25rem 2.45rem 3rem 2.35rem;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 0.3rem;
+  text-align: center;
+  font-size: 0.88rem;
+  line-height: 1.35;
+  word-break: keep-all;
+
+  p {
+    margin: 0;
+    max-width: 13rem;
+  }
 `;
