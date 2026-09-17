@@ -6,7 +6,7 @@ export const DisplayWrapper = styled.div`
   left: 50%;
   transform: translateX(-50%);
   width: 80%;
-  max-width: 25rem;
+  max-width: 18.75rem;
   text-align: center;
   word-break: keep-all;
   z-index: 3;
@@ -18,8 +18,11 @@ export const Degree = styled.h2`
 `;
 
 export const WeatherMessageLine = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  column-gap: 0.35rem;
   word-break: keep-all;
-  white-space: normal;
 `;
 
 export const RegionWrapper = styled.div`

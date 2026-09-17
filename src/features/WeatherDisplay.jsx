@@ -66,12 +66,9 @@ const WeatherDisplay = ({
           <>
             <Degree>{roundedTemp}°C</Degree>
             <WeatherMessageLine>
-              <span>{weatherMessage[0]}</span>
-              {weatherMessage.length > 1 && (
-                <>
-                  <span> • </span>
-                  <span>{weatherMessage.slice(1).join(" ")}</span>
-                </>
+              <span>{weatherMessage.slice(0, 2).join(" • ")}</span>
+              {weatherMessage.length > 2 && (
+                <span>{weatherMessage.slice(2).join(" ")}</span>
               )}
             </WeatherMessageLine>
           </>
