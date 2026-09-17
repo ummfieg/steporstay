@@ -34,21 +34,29 @@ export const CloseBtn = styled.img`
   z-index: 1000;
 `;
 
-export const SearchWrapper = styled.div`
+export const SearchWrapper = styled.form`
   display: flex;
   flex-direction: row;
   gap: 0.625rem;
   margin-top: 3rem;
   position: relative;
+`;
+
+export const SearchBtn = styled.button`
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  position: absolute;
+  left: 90%;
+  top: 27%;
 
   img {
-    cursor: pointer;
-    position: absolute;
-    left: 90%;
-    top: 27%;
-    &:hover {
-      transform: scale(1.1);
-    }
+    display: block;
+  }
+
+  &:hover {
+    transform: scale(1.1);
   }
 `;
 

@@ -4,6 +4,7 @@ import {
   ModalOverlay,
   CloseBtn,
   SearchBar,
+  SearchBtn,
   SearchWrapper,
   ModalInfoText,
   SelectedLocions,
@@ -46,17 +47,16 @@ const SearchModal = ({
     <ModalOverlay>
       <Modal>
         <CloseBtn src="assets/x-button.svg" alt="" onClick={onClose} />
-        <SearchWrapper>
+        <SearchWrapper onSubmit={handleSubmit}>
           <SearchBar
             placeholder="날씨 정보를 불러올 지역을 입력하세요"
             value={input}
             onChange={handleChange}
-            // onKeyDown={(e) => {
-            //   if (e.key === "Enter") handleSubmit();
-            // }}
-          ></SearchBar>
+          />
 
-          <img src="assets/search-icon.svg" onClick={handleSubmit} />
+          <SearchBtn type="submit" aria-label="지역 검색">
+            <img src="assets/search-icon.svg" alt="" />
+          </SearchBtn>
         </SearchWrapper>
 
         <InfoText $isError={!!errorMessage}>
