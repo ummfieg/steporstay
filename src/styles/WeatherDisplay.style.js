@@ -19,7 +19,7 @@ export const Degree = styled.h2`
 
 export const WeatherMessageLine = styled.div`
   word-break: keep-all;
-  white-space: nowrap;
+  white-space: normal;
 `;
 
 export const RegionWrapper = styled.div`
