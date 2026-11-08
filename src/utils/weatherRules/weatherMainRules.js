@@ -7,7 +7,7 @@ const weatherMainRules = [
   {
     main: "Clouds",
     message: "구름",
-    weatherImage: "assets/weatherImg/cloud.jpeg",
+    weatherImage: "assets/weatherImg/cloud.webp",
   },
   { main: "Rain", message: "비", weatherImage: "assets/weatherImg/rain.jpeg" },
   {
