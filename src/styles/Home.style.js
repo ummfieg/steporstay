@@ -5,10 +5,15 @@ export const Wrapper = styled.div`
   padding: 0.625rem;
   display: flex;
   background-color: #f1ead8;
-  background-image: radial-gradient(rgba(255, 255, 255, 0.45) 0.5px, transparent 0.5px),
+  background-image:
+    radial-gradient(rgba(255, 255, 255, 0.45) 0.5px, transparent 0.5px),
     radial-gradient(rgba(0, 0, 0, 0.08) 0.6px, transparent 0.6px);
-  background-position: 0 0, 1px 1px;
-  background-size: 3px 3px, 5px 5px;
+  background-position:
+    0 0,
+    1px 1px;
+  background-size:
+    3px 3px,
+    5px 5px;
   flex-direction: column;
   min-height: 100vh;
   min-height: 100svh;
@@ -79,8 +84,10 @@ export const WeatherImageWrapper = styled.div`
   z-index: 1;
 
   img {
-    min-height: 31.25rem;
     width: 18.75rem;
+    height: 31.25rem;
+    object-fit: cover;
+    object-position: center;
   }
 `;
 
