@@ -28,7 +28,7 @@ const weatherMainRules = [
   },
   {
     main: "Haze",
-    message: "옅은안개",
+    message: "뿌연 하늘",
     weatherImage: "assets/weatherImg/Lfog.webp",
   },
   {

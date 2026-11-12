@@ -64,7 +64,7 @@ const weatherIdRules = [
   },
   {
     ids: [721],
-    recommendation: "시야가 뿌예요! 선글라스나 마스크가 도움될 수 있어요 🕶️😷",
+    recommendation: "하늘이 뿌예요! 이동할 때 주변을 잘 살펴주세요 🌫️",
   },
   {
     ids: [731, 751, 761],
