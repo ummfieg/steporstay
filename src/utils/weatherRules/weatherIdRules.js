@@ -43,7 +43,7 @@ const weatherIdRules = [
   { ids: [601], recommendation: "펑펑 눈이옵니다🌨️ 우산을 챙겨도 좋아요!👍" },
   {
     ids: [602],
-    recommendation: "⚠️폭설이에요 길이 미끄러우니 조심 또 조심하세요 🚶🏻 🚘",
+    recommendation: "⚠️폭설이에요 길이 미끄러우니 조심 또 조심하세요 🚶🏻..🚘",
   },
   {
     ids: [611, 612],
@@ -55,7 +55,7 @@ const weatherIdRules = [
   },
   {
     ids: [701, 741],
-    recommendation: "시야가 흐릿해요! 마스크 챙기고 운전 조심하세요 🚗😷",
+    recommendation: "시야가 흐릿해요! 오늘은 천천히 이동해요 🚗🚶🏻",
   },
   {
     ids: [711],
